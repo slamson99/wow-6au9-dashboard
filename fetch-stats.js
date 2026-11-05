@@ -32,10 +32,77 @@ async function fetchJson(url, token) {
   }
 }
 
+/**
+ * Probe Blizzard Realm Index across Classic Era / Anniversary / Progression / Retail namespaces
+ * to discover the exact realm slug & profile namespace for Maladath / Oceanic PvP.
+ */
+async function discoverRealmsFromIndex(token) {
+  const dynamicNamespaces = [
+    'dynamic-classic1x-us',
+    'dynamic-classicann-us',
+    'dynamic-classic-us',
+    'dynamic-us'
+  ];
+
+  const discoveredPairs = []; // Array of { profileNs, slug, name }
+
+  console.log('\n=== Probing Blizzard Realm Index for PvP / Maladath ===');
+
+  for (const dynNs of dynamicNamespaces) {
+    console.log(`\nChecking namespace: ${dynNs}...`);
+    const url = `https://us.api.blizzard.com/data/wow/realm/index?namespace=${dynNs}&locale=en_US`;
+    const res = await fetchJson(url, token);
+    if (res.status !== 200 || !res.data) {
+      console.log(`  Failed to load ${dynNs} (HTTP ${res.status})`);
+      continue;
+    }
+
+    const realms = res.data.realms || [];
+    console.log(`  Found ${realms.length} realms.`);
+
+    const profileNs = dynNs.replace(/^dynamic-/, 'profile-');
+
+    // Log all realms in Classic namespaces or matching maladath/pvp/au
+    const matches = realms.filter(r => {
+      const n = (r.name || '').toLowerCase();
+      const s = (r.slug || '').toLowerCase();
+      return (
+        n.includes('maladath') ||
+        s.includes('maladath') ||
+        s.includes('pvp') ||
+        s.endsWith('-au') ||
+        dynNs.includes('classic1x') ||
+        dynNs.includes('classicann')
+      );
+    });
+
+    matches.forEach(m => {
+      console.log(`  -> Match [${dynNs}]: Name="${m.name}", Slug="${m.slug}", ID=${m.id}`);
+      if (
+        m.name.toLowerCase().includes('maladath') ||
+        m.slug.toLowerCase().includes('maladath') ||
+        m.slug.toLowerCase().includes('pvp') ||
+        m.slug.toLowerCase().endsWith('-au')
+      ) {
+        discoveredPairs.push({
+          profileNs,
+          slug: m.slug,
+          name: m.name
+        });
+      }
+    });
+  }
+
+  return discoveredPairs;
+}
+
 async function run() {
   console.log('=== WoW Character Snapshot Updater ===');
   const token = await getAccessToken();
   console.log('Successfully acquired Battle.net OAuth2 access token.');
+
+  // 1. Probe Realm Index first to log exact slugs & discover any dynamic realm slugs
+  const discoveredRealms = await discoverRealmsFromIndex(token);
 
   const rosterPath = path.join(__dirname, 'characters.json');
   const roster = JSON.parse(fs.readFileSync(rosterPath, 'utf8'));
@@ -59,10 +126,11 @@ async function run() {
       char.name.split('-')[0].toLowerCase().trim()
     ].filter((v, i, a) => a.indexOf(v) === i);
 
-    // Realm slug variants
+    // Realm slug variants (including any discovered slugs from the realm index)
     const realmCandidates = [
       char.realm.toLowerCase().trim(),
-      `${char.realm.toLowerCase().trim()}-au`
+      `${char.realm.toLowerCase().trim()}-au`,
+      ...discoveredRealms.map(d => d.slug)
     ].filter((v, i, a) => a.indexOf(v) === i);
 
     let foundSummary = null;
@@ -154,6 +222,7 @@ async function run() {
 
   const payload = {
     updated: new Date().toISOString(),
+    discovered_realms: discoveredRealms,
     characters: results
   };
 
