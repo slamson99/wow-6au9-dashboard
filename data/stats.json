@@ -1,5 +1,47 @@
 {
-  "updated": "2026-11-05T23:36:00.584Z",
+  "updated": "2026-11-05T23:40:49.779Z",
+  "discovered_realms": [
+    {
+      "profileNs": "profile-classic1x-us",
+      "slug": "penance-au",
+      "name": "Penance (AU)"
+    },
+    {
+      "profileNs": "profile-classic1x-us",
+      "slug": "shadowstrike-au",
+      "name": "Shadowstrike (AU)"
+    },
+    {
+      "profileNs": "profile-classicann-us",
+      "slug": "maladath",
+      "name": "Maladath"
+    },
+    {
+      "profileNs": "profile-classic-us",
+      "slug": "remulos-au",
+      "name": "Remulos (AU)"
+    },
+    {
+      "profileNs": "profile-classic-us",
+      "slug": "arugal-au",
+      "name": "Arugal (AU)"
+    },
+    {
+      "profileNs": "profile-classic-us",
+      "slug": "yojamba-au",
+      "name": "Yojamba (AU)"
+    },
+    {
+      "profileNs": "profile-classic-us",
+      "slug": "maladath",
+      "name": "Maladath"
+    },
+    {
+      "profileNs": "profile-us",
+      "slug": "us3a-account-realm-old-au",
+      "name": "US3A Account Realm OLD AU"
+    }
+  ],
   "characters": [
     {
       "name": "slamson-slamson",
