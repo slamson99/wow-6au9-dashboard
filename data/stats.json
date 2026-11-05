@@ -1,120 +1,47 @@
 {
-  "updated_at": "2026-11-05T23:26:22.501Z",
-  "online_threshold_minutes": 30,
+  "updated": "2026-11-05T23:34:39.148Z",
   "characters": [
     {
-      "id": "us-maladath-slamson-slamson",
       "name": "slamson-slamson",
-      "title": "",
-      "formatted_title": "Slamson-Slamson",
-      "realm": {
-        "name": "Maladath",
-        "slug": "maladath"
-      },
-      "region": "us",
-      "faction": "Azeroth",
-      "race": "Pending API Sync",
-      "class": "Warrior",
-      "active_spec": "Armory Queued",
-      "level": "—",
-      "equipped_item_level": "—",
-      "average_item_level": "—",
-      "achievement_points": 0,
-      "last_login_timestamp": 0,
-      "is_online": false,
-      "location": "Maladath (Oceanic)",
-      "guild": null,
-      "media": {
-        "avatar": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg",
-        "inset": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg",
-        "main_raw": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg"
-      },
+      "realm": "maladath",
+      "level": "?",
+      "class": "Adventurer",
+      "spec": "Unknown",
+      "equippedItemLevel": 0,
+      "averageItemLevel": 0,
+      "avatarUrl": "",
+      "online": false,
+      "lastLogin": null,
       "stats": {
-        "health": 0,
-        "resource_type": "Resource",
-        "resource_amount": 0,
-        "strength": 0,
-        "agility": 0,
-        "intellect": 0,
-        "stamina": 0,
-        "armor": 0,
         "crit": 0,
         "haste": 0,
         "mastery": 0,
         "versatility": 0,
-        "primary_stat_name": "Primary",
-        "primary_stat_value": 0
+        "stamina": 0,
+        "health": 0
       },
-      "equipment": [],
-      "activity": {
-        "quests_completed_total": 0,
-        "hours_active_estimate": 0,
-        "recent_quests": [
-          {
-            "title": "Awaiting Battle.net Snapshot Sync (fetch-stats.js)",
-            "zone": "Maladath (Oceanic)",
-            "status": "Queued"
-          }
-        ]
-      },
-      "fetch_warning": "Last API check returned HTTP 404; displaying cached snapshot."
+      "pending": true
     },
     {
-      "id": "us-maladath-floreat-atron",
       "name": "floreat-atron",
-      "title": "",
-      "formatted_title": "Floreat-Atron",
-      "realm": {
-        "name": "Maladath",
-        "slug": "maladath"
-      },
-      "region": "us",
-      "faction": "Azeroth",
-      "race": "Pending API Sync",
-      "class": "Warrior",
-      "active_spec": "Armory Queued",
-      "level": "—",
-      "equipped_item_level": "—",
-      "average_item_level": "—",
-      "achievement_points": 0,
-      "last_login_timestamp": 0,
-      "is_online": false,
-      "location": "Maladath (Oceanic)",
-      "guild": null,
-      "media": {
-        "avatar": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg",
-        "inset": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg",
-        "main_raw": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg"
-      },
+      "realm": "maladath",
+      "level": "?",
+      "class": "Adventurer",
+      "spec": "Unknown",
+      "equippedItemLevel": 0,
+      "averageItemLevel": 0,
+      "avatarUrl": "",
+      "online": false,
+      "lastLogin": null,
       "stats": {
-        "health": 0,
-        "resource_type": "Resource",
-        "resource_amount": 0,
-        "strength": 0,
-        "agility": 0,
-        "intellect": 0,
-        "stamina": 0,
-        "armor": 0,
         "crit": 0,
         "haste": 0,
         "mastery": 0,
         "versatility": 0,
-        "primary_stat_name": "Primary",
-        "primary_stat_value": 0
+        "stamina": 0,
+        "health": 0
       },
-      "equipment": [],
-      "activity": {
-        "quests_completed_total": 0,
-        "hours_active_estimate": 0,
-        "recent_quests": [
-          {
-            "title": "Awaiting Battle.net Snapshot Sync (fetch-stats.js)",
-            "zone": "Maladath (Oceanic)",
-            "status": "Queued"
-          }
-        ]
-      },
-      "fetch_warning": "Last API check returned HTTP 404; displaying cached snapshot."
+      "pending": true
     }
   ]
 }
