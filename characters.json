@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Thrall",
+    "realm": "area-52",
+    "region": "us",
+    "namespace": "profile-us",
+    "notes": "Warchief of the Horde - Elemental Shaman"
+  },
+  {
+    "name": "Jaina",
+    "realm": "proudmoore",
+    "region": "us",
+    "namespace": "profile-us",
+    "notes": "Lord Admiral of Kul Tiras - Frost Mage"
+  },
+  {
+    "name": "Arthas",
+    "realm": "illidan",
+    "region": "us",
+    "namespace": "profile-us",
+    "notes": "Crown Prince of Lordaeron - Unholy Death Knight"
+  },
+  {
+    "name": "Sylvanas",
+    "realm": "silvermoon",
+    "region": "eu",
+    "namespace": "profile-eu",
+    "notes": "Banshee Queen - Marksmanship Hunter"
+  },
+  {
+    "name": "Tyrande",
+    "realm": "stormrage",
+    "region": "us",
+    "namespace": "profile-us",
+    "notes": "High Priestess of Elune - Balance Druid"
+  }
+]

@@ -1,0 +1,50 @@
+name: Update WoW Character Snapshot
+
+on:
+  schedule:
+    # Runs every 2 hours on the hour
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+    inputs:
+      online_threshold_minutes:
+        description: 'Minutes since last login to consider a character Online'
+        required: false
+        default: '30'
+
+permissions:
+  contents: write
+
+jobs:
+  update-roster-stats:
+    name: Fetch Battle.net API & Commit Snapshot
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch latest character statistics from Blizzard API
+        env:
+          BNET_CLIENT_ID: ${{ secrets.BNET_CLIENT_ID }}
+          BNET_CLIENT_SECRET: ${{ secrets.BNET_CLIENT_SECRET }}
+          ONLINE_THRESHOLD_MINUTES: ${{ github.event.inputs.online_threshold_minutes || '30' }}
+        run: node fetch-stats.js
+
+      - name: Commit and push updated data/stats.json
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/stats.json
+          if git diff --staged --quiet; then
+            echo "No changes in data/stats.json to commit."
+          else
+            git commit -m "chore(data): automated WoW roster snapshot update [skip ci]"
+            git push origin HEAD:main
+          fi

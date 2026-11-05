@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WoW Forever Roster — Character & Guild Dashboard</title>
+  <meta name="description" content="World of Warcraft: Forever & Classic realms character roster, equipment inspection, and activity dashboard." />
+
+  <!-- Google Fonts: Cinzel (Gothic/Serif Headings) & Inter (Clean UI Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            obsidian: {
+              950: '#07090d',
+              900: '#0b0e14',
+              800: '#121824',
+              700: '#1a2234',
+              600: '#242f46'
+            },
+            wowgold: {
+              300: '#f3d97d',
+              400: '#d4af37',
+              500: '#c69b3a',
+              600: '#9e7825',
+              700: '#6e5114'
+            },
+            quality: {
+              poor: '#9d9d9d',
+              common: '#ffffff',
+              uncommon: '#1eff00',
+              rare: '#0070dd',
+              epic: '#a335ee',
+              legendary: '#ff8000'
+            }
+          },
+          fontFamily: {
+            display: ['Cinzel', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            'wow-card': '0 10px 30px -5px rgba(0, 0, 0, 0.75), inset 0 1px 0 0 rgba(212, 175, 55, 0.22)',
+            'wow-gold': '0 0 18px rgba(198, 155, 58, 0.35), inset 0 1px 0 rgba(255, 230, 150, 0.3)',
+            'wow-modal': '0 25px 60px -12px rgba(0, 0, 0, 0.92), 0 0 35px rgba(198, 155, 58, 0.2)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Custom Blizzard / Dark Fantasy RPG Aesthetics */
+    :root {
+      --bg-obsidian: #0b0e14;
+      --bg-slate: #121824;
+      --gold-trim: #c69b3a;
+      --gold-bright: #d4af37;
+    }
+
+    body {
+      background-color: var(--bg-obsidian);
+      background-image:
+        radial-gradient(circle at 18% 12%, rgba(198, 155, 58, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 82% 85%, rgba(59, 130, 246, 0.06) 0%, transparent 45%),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.012) 0px, rgba(255, 255, 255, 0.012) 1px, transparent 1px, transparent 12px);
+      color: #e2e8f0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Ornate RPG Frame Border */
+    .wow-frame {
+      background: linear-gradient(180deg, rgba(22, 30, 46, 0.94) 0%, rgba(11, 14, 20, 0.97) 100%);
+      border: 1px solid rgba(198, 155, 58, 0.38);
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.07);
+      position: relative;
+    }
+
+    .wow-frame-interactive {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .wow-frame-interactive:hover {
+      transform: translateY(-3px);
+      border-color: rgba(212, 175, 55, 0.85);
+      box-shadow: 0 14px 34px -6px rgba(0, 0, 0, 0.9), 0 0 20px rgba(198, 155, 58, 0.25);
+    }
+
+    /* Corner Rivets for Modal & Featured Panels */
+    .wow-corner-ornament::before,
+    .wow-corner-ornament::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border: 1px solid #d4af37;
+      background-color: #0b0e14;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .wow-corner-ornament::before {
+      top: -3px;
+      left: -3px;
+    }
+    .wow-corner-ornament::after {
+      bottom: -3px;
+      right: -3px;
+    }
+
+    /* Blizzard Gold Button */
+    .btn-wow-gold {
+      background: linear-gradient(180deg, #3a2a0d 0%, #1f1606 100%);
+      border: 1px solid #c69b3a;
+      color: #f3d97d;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+      transition: all 0.18s ease;
+    }
+    .btn-wow-gold:hover {
+      background: linear-gradient(180deg, #523b12 0%, #2d2009 100%);
+      border-color: #f3d97d;
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(212, 175, 55, 0.45);
+    }
+
+    /* Secondary Slate Button */
+    .btn-wow-slate {
+      background: linear-gradient(180deg, #1e2638 0%, #121824 100%);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #cbd5e1;
+      transition: all 0.18s ease;
+    }
+    .btn-wow-slate:hover {
+      border-color: #c69b3a;
+      color: #f3d97d;
+      background: linear-gradient(180deg, #253047 0%, #171e2e 100%);
+    }
+
+    /* Item Quality Borders & Text */
+    .quality-border-POOR { border-color: #9d9d9d !important; }
+    .quality-border-COMMON { border-color: #ffffff !important; }
+    .quality-border-UNCOMMON { border-color: #1eff00 !important; }
+    .quality-border-RARE { border-color: #0070dd !important; }
+    .quality-border-EPIC { border-color: #a335ee !important; }
+    .quality-border-LEGENDARY { border-color: #ff8000 !important; }
+
+    .quality-text-POOR { color: #9d9d9d !important; }
+    .quality-text-COMMON { color: #ffffff !important; }
+    .quality-text-UNCOMMON { color: #1eff00 !important; }
+    .quality-text-RARE { color: #0070dd !important; }
+    .quality-text-EPIC { color: #c06eff !important; }
+    .quality-text-LEGENDARY { color: #ff8000 !important; }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0e14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #242f46;
+      border: 1px solid rgba(198, 155, 58, 0.4);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #c69b3a;
+    }
+
+    /* Divider Line with Gold Diamond */
+    .wow-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(198, 155, 58, 0.55) 50%, transparent 100%);
+      position: relative;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-wowgold-500 selection:text-obsidian-950 flex flex-col min-h-screen">
+
+  <!-- TOP NAVIGATION & ROSTER HEADER -->
+  <header class="sticky top-0 z-30 border-b border-wowgold-500/40 bg-obsidian-950/90 backdrop-blur-md shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+
+        <!-- Brand Crest & Title -->
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-b from-wowgold-400/20 to-obsidian-900 border border-wowgold-400 flex items-center justify-center shadow-wow-gold shrink-0">
+            <svg class="w-7 h-7 text-wowgold-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 7v10M8 11h8"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h1 class="font-display text-xl sm:text-2xl md:text-3xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-wowgold-300 via-wowgold-400 to-wowgold-300 uppercase">
+                WoW Forever Roster
+              </h1>
+              <span class="text-[11px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded bg-wowgold-500/15 border border-wowgold-500/40 text-wowgold-300">
+                Classic &amp; Forever
+              </span>
+            </div>
+            <div class="flex items-center gap-3 text-xs text-slate-400 mt-0.5 flex-wrap">
+              <span id="snapshotStatusText" class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Loading Armory Snapshot...</span>
+              </span>
+              <span class="text-slate-600">•</span>
+              <span id="rosterSummaryCount" class="text-slate-300 font-medium">0 Champions Tracked</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Header Action Buttons -->
+        <div class="flex items-center flex-wrap gap-2.5">
+          <button
+            id="refreshSnapshotBtn"
+            type="button"
+            class="btn-wow-slate px-3.5 py-2 rounded-md text-xs sm:text-sm font-medium flex items-center gap-2 min-h-[40px]"
+            title="Reload stats.json snapshot"
+          >
+            <svg id="refreshIcon" class="w-4 h-4 text-wowgold-400 transition-transform duration-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Sync Snapshot</span>
+          </button>
+
+          <button
+            id="exportJsonBtn"
+            type="button"
+            class="btn-wow-slate px-3.5 py-2 rounded-md text-xs sm:text-sm font-medium flex items-center gap-2 min-h-[40px]"
+            title="Export combined characters.json for GitHub repository"
+          >
+            <svg class="w-4 h-4 text-wowgold-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span>Export JSON</span>
+          </button>
+
+          <button
+            id="openAddPlayerModalBtn"
+            type="button"
+            class="btn-wow-gold px-4 py-2 rounded-md text-xs sm:text-sm font-display font-bold tracking-wider uppercase flex items-center gap-2 min-h-[40px]"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>+ Add Player</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- FILTER & SEARCH BAR -->
+    <section aria-label="Roster Filters" class="wow-frame rounded-lg p-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3.5 items-center">
+
+        <!-- Search Input -->
+        <div class="lg:col-span-4 relative">
+          <label for="searchInput" class="sr-only">Search character, realm, zone, or guild</label>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Search name, realm, zone, or guild..."
+            class="w-full pl-9 pr-3 py-2 bg-obsidian-950/90 border border-slate-700/80 rounded-md text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-wowgold-400 transition-colors min-h-[40px]"
+          />
+        </div>
+
+        <!-- Class Filter -->
+        <div class="lg:col-span-3">
+          <label for="classFilter" class="sr-only">Filter by Class</label>
+          <select
+            id="classFilter"
+            class="w-full px-3 py-2 bg-obsidian-950/90 border border-slate-700/80 rounded-md text-sm text-slate-200 focus:outline-none focus:border-wowgold-400 transition-colors min-h-[40px]"
+          >
+            <option value="ALL">All Classes</option>
+          </select>
+        </div>
+
+        <!-- Specialization Filter -->
+        <div class="lg:col-span-2">
+          <label for="specFilter" class="sr-only">Filter by Specialization</label>
+          <select
+            id="specFilter"
+            class="w-full px-3 py-2 bg-obsidian-950/90 border border-slate-700/80 rounded-md text-sm text-slate-200 focus:outline-none focus:border-wowgold-400 transition-colors min-h-[40px]"
+          >
+            <option value="ALL">All Specs</option>
+          </select>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="lg:col-span-2">
+          <label for="statusFilter" class="sr-only">Filter by Status</label>
+          <select
+            id="statusFilter"
+            class="w-full px-3 py-2 bg-obsidian-950/90 border border-slate-700/80 rounded-md text-sm text-slate-200 focus:outline-none focus:border-wowgold-400 transition-colors min-h-[40px]"
+          >
+            <option value="ALL">All Statuses</option>
+            <option value="ONLINE">Online Now</option>
+            <option value="OFFLINE">Offline</option>
+            <option value="LOCAL">Locally Added</option>
+          </select>
+        </div>
+
+        <!-- Reset Filter Button -->
+        <div class="lg:col-span-1 flex justify-end">
+          <button
+            id="resetFiltersBtn"
+            type="button"
+            class="w-full px-3 py-2 rounded-md border border-slate-700/80 bg-obsidian-900 hover:border-wowgold-400 text-xs font-medium text-slate-300 hover:text-wowgold-300 transition-colors min-h-[40px]"
+            title="Reset all filters"
+          >
+            Reset
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHARACTER CARDS GRID (1 col mobile, 2 col tablet, 3 col lg, 4 col xl) -->
+    <section aria-label="Character Roster">
+      <div
+        id="characterGrid"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+      >
+        <!-- Populated dynamically by app.js -->
+      </div>
+
+      <!-- Empty State -->
+      <div
+        id="emptyStateContainer"
+        class="hidden wow-frame rounded-lg p-10 text-center max-w-lg mx-auto my-8"
+      >
+        <div class="w-14 h-14 rounded-full bg-wowgold-500/10 border border-wowgold-500/40 flex items-center justify-center mx-auto mb-4 text-wowgold-400">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h2 class="font-display text-lg font-bold text-wowgold-300 uppercase tracking-wide">No Champions Match Your Filter</h2>
+        <p class="text-sm text-slate-400 mt-1 mb-5">Try clearing your search query or add a new character to the roster.</p>
+        <button
+          id="emptyStateResetBtn"
+          type="button"
+          class="btn-wow-gold px-4 py-2 rounded-md text-xs font-display font-bold uppercase tracking-wider"
+        >
+          Show All Characters
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-wowgold-500/25 bg-obsidian-950/90 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <div class="flex items-center gap-2">
+        <span class="font-display text-wowgold-400 font-semibold tracking-wider uppercase">WoW Forever Dashboard</span>
+        <span>•</span>
+        <span>Automated via GitHub Actions &amp; Battle.net Profile API</span>
+      </div>
+      <div>
+        <span>Press <kbd class="px-1.5 py-0.5 bg-obsidian-800 border border-slate-700 rounded text-slate-300">ESC</kbd> to close modals</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: EXPANDED CHARACTER DETAIL MODAL / DRAWER                     -->
+  <!-- ===================================================================== -->
+  <div
+    id="characterDetailModal"
+    class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6 bg-black/80 backdrop-blur-sm transition-opacity"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="detailModalName"
+  >
+    <div
+      id="characterDetailDialog"
+      class="wow-frame wow-corner-ornament w-full max-w-5xl max-h-[92vh] sm:rounded-xl rounded-t-2xl overflow-hidden flex flex-col shadow-wow-modal border border-wowgold-400/60"
+    >
+      <!-- Top Class Color Accent Bar -->
+      <div id="detailModalClassBar" class="h-1.5 w-full bg-wowgold-400"></div>
+
+      <!-- Modal Header -->
+      <div class="px-5 py-4 sm:px-6 bg-obsidian-950/90 border-b border-wowgold-500/30 flex items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-4 min-w-0">
+          <div class="relative shrink-0">
+            <img
+              id="detailModalAvatar"
+              src=""
+              alt="Character Avatar"
+              class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover border-2 border-wowgold-400 shadow-lg bg-obsidian-900"
+            />
+            <span
+              id="detailModalLevelBadge"
+              class="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full bg-obsidian-950 border border-wowgold-400 text-[11px] font-bold text-wowgold-300 shadow"
+            >
+              80
+            </span>
+          </div>
+
+          <div class="min-w-0">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h2 id="detailModalName" class="font-display text-xl sm:text-2xl md:text-3xl font-bold tracking-wide truncate">
+                Character Name
+              </h2>
+              <span id="detailModalOnlineBadge" class="text-xs px-2.5 py-0.5 rounded-full font-medium"></span>
+              <span id="detailModalLocalBadge" class="hidden text-[11px] px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400/50 text-amber-300 font-medium">
+                Local Roster
+              </span>
+            </div>
+            <p id="detailModalTitle" class="text-xs sm:text-sm text-wowgold-300/90 italic truncate mt-0.5"></p>
+            <div class="flex items-center flex-wrap gap-x-3 gap-y-1 text-xs text-slate-300 mt-1.5">
+              <span id="detailModalIdentityLine" class="font-medium"></span>
+              <span class="text-slate-600">•</span>
+              <span id="detailModalGuildLine" class="text-wowgold-400 font-medium"></span>
+              <span class="text-slate-600">•</span>
+              <span id="detailModalRealmLine" class="text-slate-400"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Close Modal Button & Remove Local Character Button -->
+        <div class="flex items-center gap-2 shrink-0">
+          <button
+            id="deleteLocalCharBtn"
+            type="button"
+            class="hidden px-2.5 py-1.5 rounded border border-red-500/50 bg-red-950/40 hover:bg-red-900/60 text-xs text-red-300 font-medium transition-colors"
+            title="Remove this locally tracked character"
+          >
+            Remove Local
+          </button>
+          <button
+            id="closeDetailModalBtn"
+            type="button"
+            class="w-10 h-10 rounded-lg bg-obsidian-900 border border-slate-700 hover:border-wowgold-400 flex items-center justify-center text-slate-400 hover:text-wowgold-300 transition-colors"
+            aria-label="Close character details"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Scrollable Body -->
+      <div class="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1">
+
+        <!-- TOP SUMMARY RIBBON: Item Level, Location, Activity -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div class="bg-obsidian-950/80 border border-wowgold-500/30 rounded-lg p-3.5 flex items-center justify-between">
+            <div>
+              <span class="text-[11px] uppercase tracking-wider text-slate-400 block">Equipped Item Level</span>
+              <span id="detailModalIlvl" class="font-display text-2xl font-bold text-wowgold-300">626</span>
+              <span id="detailModalAvgIlvl" class="text-xs text-slate-400 ml-1">(628 Max)</span>
+            </div>
+            <div class="w-10 h-10 rounded-md bg-wowgold-500/10 border border-wowgold-500/30 flex items-center justify-center text-wowgold-400">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="bg-obsidian-950/80 border border-wowgold-500/30 rounded-lg p-3.5 flex items-center justify-between">
+            <div class="min-w-0 pr-2">
+              <span class="text-[11px] uppercase tracking-wider text-slate-400 block">Current Zone / Location</span>
+              <span id="detailModalLocation" class="text-sm sm:text-base font-semibold text-slate-100 truncate block mt-0.5">Orgrimmar</span>
+            </div>
+            <div class="w-10 h-10 rounded-md bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="bg-obsidian-950/80 border border-wowgold-500/30 rounded-lg p-3.5 flex items-center justify-between">
+            <div>
+              <span class="text-[11px] uppercase tracking-wider text-slate-400 block">Activity &amp; Last Seen</span>
+              <span id="detailModalLastSeen" class="text-sm sm:text-base font-semibold text-emerald-400 block mt-0.5">Online Now</span>
+              <span id="detailModalHoursPlayed" class="text-xs text-slate-400">Est. 1,200 hrs active</span>
+            </div>
+            <div class="w-10 h-10 rounded-md bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- DETAILED ATTRIBUTES & PROGRESSION SPLIT -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+          <!-- Left Column (5 cols): Core & Secondary Attributes + Quests -->
+          <div class="lg:col-span-5 space-y-5">
+
+            <!-- Detailed Attributes Panel -->
+            <div class="bg-obsidian-950/75 border border-slate-800 rounded-lg p-4">
+              <h3 class="font-display text-sm font-bold uppercase tracking-wider text-wowgold-300 border-b border-wowgold-500/25 pb-2 mb-3 flex items-center justify-between">
+                <span>Combat Attributes</span>
+                <span id="detailModalHealthPool" class="text-xs font-sans font-semibold text-emerald-400"></span>
+              </h3>
+
+              <!-- Base Stats Grid -->
+              <div class="grid grid-cols-2 gap-2.5 mb-3">
+                <div class="p-2.5 rounded bg-obsidian-900/90 border border-slate-800/90 flex items-center justify-between">
+                  <span class="text-xs text-slate-400">Strength</span>
+                  <span id="statStrength" class="text-sm font-bold text-slate-100">0</span>
+                </div>
+                <div class="p-2.5 rounded bg-obsidian-900/90 border border-slate-800/90 flex items-center justify-between">
+                  <span class="text-xs text-slate-400">Agility</span>
+                  <span id="statAgility" class="text-sm font-bold text-slate-100">0</span>
+                </div>
+                <div class="p-2.5 rounded bg-obsidian-900/90 border border-slate-800/90 flex items-center justify-between">
+                  <span class="text-xs text-slate-400">Intellect</span>
+                  <span id="statIntellect" class="text-sm font-bold text-slate-100">0</span>
+                </div>
+                <div class="p-2.5 rounded bg-obsidian-900/90 border border-slate-800/90 flex items-center justify-between">
+                  <span class="text-xs text-slate-400">Stamina</span>
+                  <span id="statStamina" class="text-sm font-bold text-slate-100">0</span>
+                </div>
+              </div>
+
+              <!-- Secondary Ratings & Armor -->
+              <div class="space-y-2 pt-2 border-t border-slate-800/80">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-400">Critical Strike</span>
+                  <span id="statCrit" class="font-semibold text-amber-300">0%</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-400">Haste</span>
+                  <span id="statHaste" class="font-semibold text-emerald-300">0%</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-400">Mastery</span>
+                  <span id="statMastery" class="font-semibold text-purple-300">0%</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-400">Versatility</span>
+                  <span id="statVersatility" class="font-semibold text-sky-300">0%</span>
+                </div>
+                <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/60">
+                  <span class="text-slate-400">Armor Rating</span>
+                  <span id="statArmor" class="font-semibold text-slate-200">0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active & Recent Quests / Campaign Log -->
+            <div class="bg-obsidian-950/75 border border-slate-800 rounded-lg p-4">
+              <div class="flex items-center justify-between border-b border-wowgold-500/25 pb-2 mb-3">
+                <h3 class="font-display text-sm font-bold uppercase tracking-wider text-wowgold-300">
+                  Quest Log &amp; Campaign
+                </h3>
+                <span id="detailModalQuestCount" class="text-xs text-slate-400 font-medium"></span>
+              </div>
+              <ul id="detailModalQuestList" class="space-y-2.5">
+                <!-- Populated dynamically -->
+              </ul>
+            </div>
+
+          </div>
+
+          <!-- Right Column (7 cols): 16-Slot Paper-Doll Equipment Grid -->
+          <div class="lg:col-span-7">
+            <div class="bg-obsidian-950/75 border border-slate-800 rounded-lg p-4 h-full">
+              <div class="flex items-center justify-between border-b border-wowgold-500/25 pb-2 mb-3.5">
+                <h3 class="font-display text-sm font-bold uppercase tracking-wider text-wowgold-300">
+                  Equipped Gear (16-Slot Armory)
+                </h3>
+                <div class="flex items-center gap-2 text-[11px]">
+                  <span class="inline-block w-2 h-2 rounded-full bg-quality-legendary"></span><span class="text-slate-400">Legendary</span>
+                  <span class="inline-block w-2 h-2 rounded-full bg-quality-epic ml-1"></span><span class="text-slate-400">Epic</span>
+                  <span class="inline-block w-2 h-2 rounded-full bg-quality-rare ml-1"></span><span class="text-slate-400">Rare</span>
+                </div>
+              </div>
+
+              <!-- 16-Slot Grid -->
+              <div id="detailModalEquipmentGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <!-- Populated dynamically by app.js -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: ADD PLAYER / CHARACTER MODAL + EXPORT JSON DRAWER            -->
+  <!-- ===================================================================== -->
+  <div
+    id="addPlayerModal"
+    class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="addPlayerModalTitle"
+  >
+    <div class="wow-frame wow-corner-ornament w-full max-w-lg rounded-xl overflow-hidden shadow-wow-modal border border-wowgold-400/60">
+      <div class="h-1.5 w-full bg-gradient-to-r from-wowgold-600 via-wowgold-300 to-wowgold-600"></div>
+
+      <div class="px-6 py-4 bg-obsidian-950 border-b border-wowgold-500/30 flex items-center justify-between">
+        <div>
+          <h2 id="addPlayerModalTitle" class="font-display text-lg sm:text-xl font-bold text-wowgold-300 uppercase tracking-wider">
+            Add Champion to Roster
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Saved immediately to your browser &amp; ready for GitHub <code class="text-wowgold-300">characters.json</code> export.
+          </p>
+        </div>
+        <button
+          id="closeAddPlayerModalBtn"
+          type="button"
+          class="w-9 h-9 rounded-lg bg-obsidian-900 border border-slate-700 hover:border-wowgold-400 flex items-center justify-center text-slate-400 hover:text-wowgold-300 transition-colors"
+          aria-label="Close Add Player Modal"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="addPlayerForm" class="p-6 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="charNameInput" class="block text-xs font-semibold uppercase tracking-wider text-wowgold-300 mb-1">
+              Character Name *
+            </label>
+            <input
+              id="charNameInput"
+              name="name"
+              type="text"
+              required
+              placeholder="e.g. Saurfang"
+              class="w-full px-3.5 py-2 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-wowgold-400"
+            />
+          </div>
+
+          <div>
+            <label for="realmSlugInput" class="block text-xs font-semibold uppercase tracking-wider text-wowgold-300 mb-1">
+              Realm Slug *
+            </label>
+            <input
+              id="realmSlugInput"
+              name="realm"
+              type="text"
+              required
+              placeholder="e.g. area-52 or whitemane"
+              class="w-full px-3.5 py-2 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-wowgold-400"
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label for="regionInput" class="block text-xs font-semibold uppercase tracking-wider text-wowgold-300 mb-1">
+              Region *
+            </label>
+            <select
+              id="regionInput"
+              name="region"
+              class="w-full px-3 py-2 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 focus:outline-none focus:border-wowgold-400"
+            >
+              <option value="us">US (Americas &amp; Oceania)</option>
+              <option value="eu">EU (Europe)</option>
+              <option value="kr">KR (Korea)</option>
+              <option value="tw">TW (Taiwan)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="classSelectInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
+              Class
+            </label>
+            <select
+              id="classSelectInput"
+              name="class"
+              class="w-full px-3 py-2 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 focus:outline-none focus:border-wowgold-400"
+            >
+              <option value="Warrior">Warrior</option>
+              <option value="Paladin">Paladin</option>
+              <option value="Hunter">Hunter</option>
+              <option value="Rogue">Rogue</option>
+              <option value="Priest">Priest</option>
+              <option value="Death Knight">Death Knight</option>
+              <option value="Shaman">Shaman</option>
+              <option value="Mage">Mage</option>
+              <option value="Warlock">Warlock</option>
+              <option value="Monk">Monk</option>
+              <option value="Druid">Druid</option>
+              <option value="Demon Hunter">Demon Hunter</option>
+              <option value="Evoker">Evoker</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="specTextInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
+              Active Spec
+            </label>
+            <input
+              id="specTextInput"
+              name="spec"
+              type="text"
+              placeholder="e.g. Arms / Fury"
+              class="w-full px-3.5 py-2 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-wowgold-400"
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label for="raceTextInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
+              Race
+            </label>
+            <input
+              id="raceTextInput"
+              name="race"
+              type="text"
+              placeholder="e.g. Orc, Human"
+              class="w-full px-3.5 py-2 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-wowgold-400"
+            />
+          </div>
+
+          <div>
+            <label for="levelInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
+              Level
+            </label>
+            <input
+              id="levelInput"
+              name="level"
+              type="number"
+              min="1"
+              max="80"
+              value="80"
+              class="w-full px-3.5 py-2 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 focus:outline-none focus:border-wowgold-400"
+            />
+          </div>
+
+          <div>
+            <label for="ilvlInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
+              Item Level
+            </label>
+            <input
+              id="ilvlInput"
+              name="ilvl"
+              type="number"
+              min="1"
+              max="700"
+              value="615"
+              class="w-full px-3.5 py-2 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 focus:outline-none focus:border-wowgold-400"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="zoneInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
+            Current Zone / Guild Note (Optional)
+          </label>
+          <input
+            id="zoneInput"
+            name="zone"
+            type="text"
+            placeholder="e.g. Orgrimmar - Valley of Strength"
+            class="w-full px-3.5 py-2 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-wowgold-400"
+          />
+        </div>
+
+        <div class="pt-3 border-t border-slate-800 flex items-center justify-end gap-3">
+          <button
+            id="cancelAddPlayerBtn"
+            type="button"
+            class="btn-wow-slate px-4 py-2 rounded-md text-xs font-semibold uppercase tracking-wider"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn-wow-gold px-5 py-2 rounded-md text-xs font-display font-bold uppercase tracking-wider"
+          >
+            Save to Roster
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 3: EXPORT CHARACTERS.JSON MODAL                                 -->
+  <!-- ===================================================================== -->
+  <div
+    id="exportJsonModal"
+    class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="exportJsonModalTitle"
+  >
+    <div class="wow-frame wow-corner-ornament w-full max-w-2xl rounded-xl overflow-hidden shadow-wow-modal border border-wowgold-400/60">
+      <div class="h-1.5 w-full bg-gradient-to-r from-wowgold-600 via-wowgold-300 to-wowgold-600"></div>
+
+      <div class="px-6 py-4 bg-obsidian-950 border-b border-wowgold-500/30 flex items-center justify-between">
+        <div>
+          <h2 id="exportJsonModalTitle" class="font-display text-lg sm:text-xl font-bold text-wowgold-300 uppercase tracking-wider">
+            Export Roster Configuration (<code class="text-sm">characters.json</code>)
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Copy this JSON into your repository's <code class="text-wowgold-300">characters.json</code> so GitHub Actions fetches live Blizzard data for all characters.
+          </p>
+        </div>
+        <button
+          id="closeExportJsonModalBtn"
+          type="button"
+          class="w-9 h-9 rounded-lg bg-obsidian-900 border border-slate-700 hover:border-wowgold-400 flex items-center justify-center text-slate-400 hover:text-wowgold-300 transition-colors"
+          aria-label="Close Export Modal"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <textarea
+          id="exportJsonTextarea"
+          readonly
+          rows="12"
+          class="w-full p-3.5 bg-obsidian-950 border border-slate-700 rounded-md font-mono text-xs text-emerald-300 focus:outline-none focus:border-wowgold-400"
+        ></textarea>
+
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <span id="copyConfirmMessage" class="text-xs text-emerald-400 font-medium opacity-0 transition-opacity">
+            ✓ Copied characters.json to clipboard!
+          </span>
+          <div class="flex items-center gap-2.5 ml-auto">
+            <button
+              id="downloadJsonFileBtn"
+              type="button"
+              class="btn-wow-slate px-4 py-2 rounded-md text-xs font-semibold uppercase tracking-wider"
+            >
+              Download characters.json
+            </button>
+            <button
+              id="copyExportJsonBtn"
+              type="button"
+              class="btn-wow-gold px-5 py-2 rounded-md text-xs font-display font-bold uppercase tracking-wider"
+            >
+              Copy to Clipboard
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script src="./app.js"></script>
+</body>
+</html>

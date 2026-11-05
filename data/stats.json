@@ -1,0 +1,1091 @@
+{
+  "updated_at": "2026-11-05T22:31:05.679Z",
+  "online_threshold_minutes": 30,
+  "characters": [
+    {
+      "id": "us-area-52-thrall",
+      "name": "Thrall",
+      "title": "%s, Earth-Warder's Champion",
+      "formatted_title": "Thrall, Earth-Warder's Champion",
+      "realm": {
+        "name": "Area 52",
+        "slug": "area-52"
+      },
+      "region": "us",
+      "faction": "Horde",
+      "race": "Orc",
+      "class": "Shaman",
+      "active_spec": "Elemental",
+      "level": 80,
+      "equipped_item_level": 626,
+      "average_item_level": 628,
+      "achievement_points": 38450,
+      "last_login_timestamp": 1793954800000,
+      "is_online": true,
+      "location": "Orgrimmar - Grommash Hold",
+      "guild": {
+        "name": "Earthen Ring",
+        "rank": "Farseer (Rank 1)",
+        "realm": "Area 52"
+      },
+      "media": {
+        "avatar": "https://render.worldofwarcraft.com/us/icons/56/classicon_shaman.jpg",
+        "inset": "https://render.worldofwarcraft.com/us/icons/56/classicon_shaman.jpg",
+        "main_raw": "https://render.worldofwarcraft.com/us/icons/56/classicon_shaman.jpg"
+      },
+      "stats": {
+        "health": 5842100,
+        "resource_type": "Maelstrom",
+        "resource_amount": 100,
+        "strength": 1840,
+        "agility": 2150,
+        "intellect": 48920,
+        "stamina": 146050,
+        "armor": 14200,
+        "crit": 28.4,
+        "haste": 24.1,
+        "mastery": 42.8,
+        "versatility": 11.5,
+        "primary_stat_name": "Intellect",
+        "primary_stat_value": 48920
+      },
+      "equipment": [
+        {
+          "slot": "HEAD",
+          "slot_name": "Head",
+          "name": "Greathelm of the Raging Tempest",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_helmet_mail_raidshaman_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "NECK",
+          "slot_name": "Neck",
+          "name": "Amulet of Earthen Fury",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_necklace_109.jpg",
+          "enchant": "Tier 3 Socketed"
+        },
+        {
+          "slot": "SHOULDER",
+          "slot_name": "Shoulders",
+          "name": "Pauldrons of Cataclysmic Thunder",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_shoulder_mail_raidshaman_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "BACK",
+          "slot_name": "Back",
+          "name": "Shroud of the World-Shaman",
+          "item_level": 623,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_cape_20.jpg",
+          "enchant": "Chant of Leeching Fangs"
+        },
+        {
+          "slot": "CHEST",
+          "slot_name": "Chest",
+          "name": "Hauberk of the Raging Tempest",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_chest_mail_raidshaman_s_01.jpg",
+          "enchant": "Crystalline Radiance"
+        },
+        {
+          "slot": "WRIST",
+          "slot_name": "Wrist",
+          "name": "Bindings of Magma Flow",
+          "item_level": 619,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_bracer_mail_raidshaman_s_01.jpg",
+          "enchant": "Chant of Armored Avoidance"
+        },
+        {
+          "slot": "HANDS",
+          "slot_name": "Hands",
+          "name": "Gauntlets of the Raging Tempest",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_glove_mail_raidshaman_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "WAIST",
+          "slot_name": "Waist",
+          "name": "Girdle of the Maelstrom's Eye",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_belt_mail_raidshaman_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "LEGS",
+          "slot_name": "Legs",
+          "name": "Legguards of the Raging Tempest",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_pant_mail_raidshaman_s_01.jpg",
+          "enchant": "Daybreak Spellthread"
+        },
+        {
+          "slot": "FEET",
+          "slot_name": "Feet",
+          "name": "Sabatons of Trembling Earth",
+          "item_level": 623,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_boot_mail_raidshaman_s_01.jpg",
+          "enchant": "Defender's March"
+        },
+        {
+          "slot": "FINGER_1",
+          "slot_name": "Ring 1",
+          "name": "Signet of the Doomhammer",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_ring_146.jpg",
+          "enchant": "Radiant Mastery"
+        },
+        {
+          "slot": "FINGER_2",
+          "slot_name": "Ring 2",
+          "name": "Band of the Firelord's Pact",
+          "item_level": 619,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_ring_152.jpg",
+          "enchant": "Radiant Crit"
+        },
+        {
+          "slot": "TRINKET_1",
+          "slot_name": "Trinket 1",
+          "name": "Totem of the Ancestral Spirits",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/spell_nature_earthbindtotem.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "TRINKET_2",
+          "slot_name": "Trinket 2",
+          "name": "Spymaster's Web",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_web_02.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "MAIN_HAND",
+          "slot_name": "Main Hand",
+          "name": "Doomhammer, Legacy of Frostwolf",
+          "item_level": 639,
+          "quality": "LEGENDARY",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_mace_1h_doomhammer_d_01.jpg",
+          "enchant": "Authority of the Depths"
+        },
+        {
+          "slot": "OFF_HAND",
+          "slot_name": "Off Hand",
+          "name": "Bulwark of the Highmountain",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_shield_32.jpg",
+          "enchant": null
+        }
+      ],
+      "activity": {
+        "quests_completed_total": 11420,
+        "hours_active_estimate": 4280,
+        "recent_quests": [
+          {
+            "title": "The Voice of the Azerothian Core",
+            "zone": "Dornogal",
+            "status": "Active Objective"
+          },
+          {
+            "title": "Echoes of the Elements",
+            "zone": "Isle of Dorn",
+            "status": "Completed Recently"
+          },
+          {
+            "title": "A Whisper in the Deep",
+            "zone": "The Ringing Deeps",
+            "status": "Completed Recently"
+          },
+          {
+            "title": "Defending the Earthen Ring",
+            "zone": "Azj-Kahet",
+            "status": "Completed Recently"
+          }
+        ]
+      }
+    },
+    {
+      "id": "us-proudmoore-jaina",
+      "name": "Jaina",
+      "title": "Lord Admiral %s",
+      "formatted_title": "Lord Admiral Jaina",
+      "realm": {
+        "name": "Proudmoore",
+        "slug": "proudmoore"
+      },
+      "region": "us",
+      "faction": "Alliance",
+      "race": "Kul Tiran",
+      "class": "Mage",
+      "active_spec": "Frost",
+      "level": 80,
+      "equipped_item_level": 629,
+      "average_item_level": 630,
+      "achievement_points": 41200,
+      "last_login_timestamp": 1793954950000,
+      "is_online": true,
+      "location": "Boralus Harbor - Admiralty Keep",
+      "guild": {
+        "name": "Kirin Tor Council",
+        "rank": "Archmage (Rank 1)",
+        "realm": "Proudmoore"
+      },
+      "media": {
+        "avatar": "https://render.worldofwarcraft.com/us/icons/56/classicon_mage.jpg",
+        "inset": "https://render.worldofwarcraft.com/us/icons/56/classicon_mage.jpg",
+        "main_raw": "https://render.worldofwarcraft.com/us/icons/56/classicon_mage.jpg"
+      },
+      "stats": {
+        "health": 5412000,
+        "resource_type": "Mana",
+        "resource_amount": 2500000,
+        "strength": 1240,
+        "agility": 1520,
+        "intellect": 51480,
+        "stamina": 135300,
+        "armor": 6800,
+        "crit": 33.4,
+        "haste": 29.8,
+        "mastery": 31.2,
+        "versatility": 14,
+        "primary_stat_name": "Intellect",
+        "primary_stat_value": 51480
+      },
+      "equipment": [
+        {
+          "slot": "HEAD",
+          "slot_name": "Head",
+          "name": "Cowl of the Frostborne Admiralty",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_helmet_cloth_raidmage_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "NECK",
+          "slot_name": "Neck",
+          "name": "Pendant of Proudmoore's Anchor",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_necklace_108.jpg",
+          "enchant": "Tier 3 Socketed"
+        },
+        {
+          "slot": "SHOULDER",
+          "slot_name": "Shoulders",
+          "name": "Mantle of the Kirin Tor",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_shoulder_cloth_raidmage_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "BACK",
+          "slot_name": "Back",
+          "name": "Drape of Theramore's Memory",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_cape_18.jpg",
+          "enchant": "Chant of Winged Grace"
+        },
+        {
+          "slot": "CHEST",
+          "slot_name": "Chest",
+          "name": "Robes of the Glacial Tempest",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_chest_cloth_raidmage_s_01.jpg",
+          "enchant": "Crystalline Radiance"
+        },
+        {
+          "slot": "WRIST",
+          "slot_name": "Wrist",
+          "name": "Cuffs of Arcane Mastery",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_bracer_cloth_raidmage_s_01.jpg",
+          "enchant": "Chant of Armored Leech"
+        },
+        {
+          "slot": "HANDS",
+          "slot_name": "Hands",
+          "name": "Gloves of the Frostborne",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_glove_cloth_raidmage_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "WAIST",
+          "slot_name": "Waist",
+          "name": "Sash of Unrelenting Winter",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_belt_cloth_raidmage_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "LEGS",
+          "slot_name": "Legs",
+          "name": "Leggings of the Glacial Tempest",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_pant_cloth_raidmage_s_01.jpg",
+          "enchant": "Sunset Spellthread"
+        },
+        {
+          "slot": "FEET",
+          "slot_name": "Feet",
+          "name": "Slippers of Freezing Tides",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_boot_cloth_raidmage_s_01.jpg",
+          "enchant": "Defender's March"
+        },
+        {
+          "slot": "FINGER_1",
+          "slot_name": "Ring 1",
+          "name": "Loop of Dalaran's Eye",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_ring_147.jpg",
+          "enchant": "Radiant Haste"
+        },
+        {
+          "slot": "FINGER_2",
+          "slot_name": "Ring 2",
+          "name": "Signet of Antonidas",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_ring_149.jpg",
+          "enchant": "Radiant Haste"
+        },
+        {
+          "slot": "TRINKET_1",
+          "slot_name": "Trinket 1",
+          "name": "Tome of Unstable Power",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_book_09.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "TRINKET_2",
+          "slot_name": "Trinket 2",
+          "name": "focusing Crystal of the Tides",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_enchant_shardbrilliantsmall.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "MAIN_HAND",
+          "slot_name": "Main Hand",
+          "name": "Aluneth, Greatstaff of the Magna",
+          "item_level": 639,
+          "quality": "LEGENDARY",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_staff_2h_artifactantonidas_d_01.jpg",
+          "enchant": "Authority of Fiery Resolve"
+        },
+        {
+          "slot": "OFF_HAND",
+          "slot_name": "Off Hand",
+          "name": "Two-Handed Equipped",
+          "item_level": 0,
+          "quality": "COMMON",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg",
+          "enchant": null
+        }
+      ],
+      "activity": {
+        "quests_completed_total": 14890,
+        "hours_active_estimate": 5120,
+        "recent_quests": [
+          {
+            "title": "Survivors of the Dalaran Crash",
+            "zone": "Isle of Dorn",
+            "status": "Active Objective"
+          },
+          {
+            "title": "Arcane Wards of Khaz Algar",
+            "zone": "Dornogal",
+            "status": "Completed Recently"
+          },
+          {
+            "title": "Daughter of the Sea's Vigil",
+            "zone": "Boralus",
+            "status": "Completed Recently"
+          },
+          {
+            "title": "The Violet Hold Ledger",
+            "zone": "Hallowfall",
+            "status": "Completed Recently"
+          }
+        ]
+      }
+    },
+    {
+      "id": "us-illidan-arthas",
+      "name": "Arthas",
+      "title": "%s, The Lich King",
+      "formatted_title": "Arthas, The Lich King",
+      "realm": {
+        "name": "Illidan",
+        "slug": "illidan"
+      },
+      "region": "us",
+      "faction": "Alliance",
+      "race": "Human",
+      "class": "Death Knight",
+      "active_spec": "Unholy",
+      "level": 80,
+      "equipped_item_level": 632,
+      "average_item_level": 632,
+      "achievement_points": 29800,
+      "last_login_timestamp": 1793941200000,
+      "is_online": false,
+      "location": "Icecrown Citadel - The Frozen Throne",
+      "guild": {
+        "name": "Knights of the Ebon Blade",
+        "rank": "Deathlord (Rank 1)",
+        "realm": "Illidan"
+      },
+      "media": {
+        "avatar": "https://render.worldofwarcraft.com/us/icons/56/classicon_deathknight.jpg",
+        "inset": "https://render.worldofwarcraft.com/us/icons/56/classicon_deathknight.jpg",
+        "main_raw": "https://render.worldofwarcraft.com/us/icons/56/classicon_deathknight.jpg"
+      },
+      "stats": {
+        "health": 7120400,
+        "resource_type": "Runic Power",
+        "resource_amount": 100,
+        "strength": 53210,
+        "agility": 1820,
+        "intellect": 1410,
+        "stamina": 178010,
+        "armor": 28450,
+        "crit": 22.1,
+        "haste": 31.5,
+        "mastery": 48.2,
+        "versatility": 9.8,
+        "primary_stat_name": "Strength",
+        "primary_stat_value": 53210
+      },
+      "equipment": [
+        {
+          "slot": "HEAD",
+          "slot_name": "Head",
+          "name": "Helm of Domination",
+          "item_level": 639,
+          "quality": "LEGENDARY",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_helmet_plate_raiddeathknight_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "NECK",
+          "slot_name": "Neck",
+          "name": "Choker of the Scourge Lord",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_necklace_107.jpg",
+          "enchant": "Tier 3 Socketed"
+        },
+        {
+          "slot": "SHOULDER",
+          "slot_name": "Shoulders",
+          "name": "Spaulders of the Risen Horsemen",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_shoulder_plate_raiddeathknight_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "BACK",
+          "slot_name": "Back",
+          "name": "Winter's Remorse Cloak",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_cape_19.jpg",
+          "enchant": "Chant of Leeching Fangs"
+        },
+        {
+          "slot": "CHEST",
+          "slot_name": "Chest",
+          "name": "Breastplate of Saronite Dread",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_chest_plate_raiddeathknight_s_01.jpg",
+          "enchant": "Crystalline Radiance"
+        },
+        {
+          "slot": "WRIST",
+          "slot_name": "Wrist",
+          "name": "Vambraces of Unholy Blight",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_bracer_plate_raiddeathknight_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "HANDS",
+          "slot_name": "Hands",
+          "name": "Crusader's Forsaken Grips",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_glove_plate_raiddeathknight_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "WAIST",
+          "slot_name": "Waist",
+          "name": "Girdle of the Plaguelands",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_belt_plate_raiddeathknight_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "LEGS",
+          "slot_name": "Legs",
+          "name": "Greaves of the Frozen Throne",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_pant_plate_raiddeathknight_s_01.jpg",
+          "enchant": "Stormbound Armor Kit"
+        },
+        {
+          "slot": "FEET",
+          "slot_name": "Feet",
+          "name": "Sabatons of relentless March",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_boot_plate_raiddeathknight_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "FINGER_1",
+          "slot_name": "Ring 1",
+          "name": "Seal of Lordaeron's Fall",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_ring_148.jpg",
+          "enchant": "Radiant Mastery"
+        },
+        {
+          "slot": "FINGER_2",
+          "slot_name": "Ring 2",
+          "name": "Ashen Band of Endless Vengeance",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_ring_81.jpg",
+          "enchant": "Radiant Haste"
+        },
+        {
+          "slot": "TRINKET_1",
+          "slot_name": "Trinket 1",
+          "name": "Deathbringer's Will",
+          "item_level": 636,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_trinket_04.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "TRINKET_2",
+          "slot_name": "Trinket 2",
+          "name": "Vial of Animated Shadows",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_alchemy_elixir_02.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "MAIN_HAND",
+          "slot_name": "Main Hand",
+          "name": "Frostmourne, Hungering Runeblade",
+          "item_level": 639,
+          "quality": "LEGENDARY",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_sword_2h_artifactfrostmourne_d_01.jpg",
+          "enchant": "Rune of the Fallen Crusader"
+        },
+        {
+          "slot": "OFF_HAND",
+          "slot_name": "Off Hand",
+          "name": "Two-Handed Equipped",
+          "item_level": 0,
+          "quality": "COMMON",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg",
+          "enchant": null
+        }
+      ],
+      "activity": {
+        "quests_completed_total": 8410,
+        "hours_active_estimate": 6150,
+        "recent_quests": [
+          {
+            "title": "The Culling of Stratholme",
+            "zone": "Caverns of Time",
+            "status": "Completed Recently"
+          },
+          {
+            "title": "Echoes of the Runeblade",
+            "zone": "Icecrown",
+            "status": "Active Objective"
+          },
+          {
+            "title": "Acherus Summons",
+            "zone": "Eastern Plaguelands",
+            "status": "Completed Recently"
+          }
+        ]
+      }
+    },
+    {
+      "id": "eu-silvermoon-sylvanas",
+      "name": "Sylvanas",
+      "title": "Banshee Queen %s",
+      "formatted_title": "Banshee Queen Sylvanas",
+      "realm": {
+        "name": "Silvermoon",
+        "slug": "silvermoon"
+      },
+      "region": "eu",
+      "faction": "Horde",
+      "race": "Undead",
+      "class": "Hunter",
+      "active_spec": "Marksmanship",
+      "level": 80,
+      "equipped_item_level": 621,
+      "average_item_level": 623,
+      "achievement_points": 31050,
+      "last_login_timestamp": 1793898000000,
+      "is_online": false,
+      "location": "Undercity - The Royal Quarter",
+      "guild": {
+        "name": "The Dark Rangers",
+        "rank": "Ranger-General (Rank 1)",
+        "realm": "Silvermoon"
+      },
+      "media": {
+        "avatar": "https://render.worldofwarcraft.com/us/icons/56/classicon_hunter.jpg",
+        "inset": "https://render.worldofwarcraft.com/us/icons/56/classicon_hunter.jpg",
+        "main_raw": "https://render.worldofwarcraft.com/us/icons/56/classicon_hunter.jpg"
+      },
+      "stats": {
+        "health": 5610200,
+        "resource_type": "Focus",
+        "resource_amount": 100,
+        "strength": 1540,
+        "agility": 46890,
+        "intellect": 1320,
+        "stamina": 140255,
+        "armor": 12400,
+        "crit": 36.8,
+        "haste": 18.2,
+        "mastery": 38.5,
+        "versatility": 12.1,
+        "primary_stat_name": "Agility",
+        "primary_stat_value": 46890
+      },
+      "equipment": [
+        {
+          "slot": "HEAD",
+          "slot_name": "Head",
+          "name": "Hood of the Dark Ranger",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_helmet_mail_raidhunter_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "NECK",
+          "slot_name": "Neck",
+          "name": "Locket of the Windrunner Sisters",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_necklace_36.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "SHOULDER",
+          "slot_name": "Shoulders",
+          "name": "Spaulders of the Banshee's Wail",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_shoulder_mail_raidhunter_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "BACK",
+          "slot_name": "Back",
+          "name": "Cloak of Black Arrows",
+          "item_level": 619,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_cape_21.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "CHEST",
+          "slot_name": "Chest",
+          "name": "Chainmail of Quel'Thalas",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_chest_mail_raidhunter_s_01.jpg",
+          "enchant": "Crystalline Radiance"
+        },
+        {
+          "slot": "WRIST",
+          "slot_name": "Wrist",
+          "name": "Bracers of Silent Aim",
+          "item_level": 616,
+          "quality": "RARE",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_bracer_mail_raidhunter_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "HANDS",
+          "slot_name": "Hands",
+          "name": "Grips of Unerring Precision",
+          "item_level": 623,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_glove_mail_raidhunter_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "WAIST",
+          "slot_name": "Waist",
+          "name": "Quiver-Belt of Shadow",
+          "item_level": 619,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_belt_mail_raidhunter_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "LEGS",
+          "slot_name": "Legs",
+          "name": "Leggings of Forsaken Vengeance",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_pant_mail_raidhunter_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "FEET",
+          "slot_name": "Feet",
+          "name": "Stalker's Shadow Striders",
+          "item_level": 619,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_boot_mail_raidhunter_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "FINGER_1",
+          "slot_name": "Ring 1",
+          "name": "Band of Silvermoon's Spire",
+          "item_level": 623,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_ring_140.jpg",
+          "enchant": "Radiant Crit"
+        },
+        {
+          "slot": "FINGER_2",
+          "slot_name": "Ring 2",
+          "name": "Signet of the Undercity",
+          "item_level": 616,
+          "quality": "RARE",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_ring_141.jpg",
+          "enchant": "Radiant Crit"
+        },
+        {
+          "slot": "TRINKET_1",
+          "slot_name": "Trinket 1",
+          "name": "Music Box of Highborne Lament",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_ornatebox.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "TRINKET_2",
+          "slot_name": "Trinket 2",
+          "name": "Badge of the Ranger-General",
+          "item_level": 619,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_talisman_07.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "MAIN_HAND",
+          "slot_name": "Main Hand",
+          "name": "Rae'shalare, Death's Whisper",
+          "item_level": 636,
+          "quality": "LEGENDARY",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_bow_1h_sylvanas_d_01.jpg",
+          "enchant": "Scope of Fatal Crit"
+        },
+        {
+          "slot": "OFF_HAND",
+          "slot_name": "Off Hand",
+          "name": "Ranged Weapon Equipped",
+          "item_level": 0,
+          "quality": "COMMON",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg",
+          "enchant": null
+        }
+      ],
+      "activity": {
+        "quests_completed_total": 9820,
+        "hours_active_estimate": 3890,
+        "recent_quests": [
+          {
+            "title": "Penance in the Maw",
+            "zone": "The Maw",
+            "status": "Active Objective"
+          },
+          {
+            "title": "Reclaiming Tirisfal",
+            "zone": "Tirisfal Glades",
+            "status": "Completed Recently"
+          },
+          {
+            "title": "The Windrunner Legacy",
+            "zone": "Ghostlands",
+            "status": "Completed Recently"
+          }
+        ]
+      }
+    },
+    {
+      "id": "us-stormrage-tyrande",
+      "name": "Tyrande",
+      "title": "High Priestess %s",
+      "formatted_title": "High Priestess Tyrande",
+      "realm": {
+        "name": "Stormrage",
+        "slug": "stormrage"
+      },
+      "region": "us",
+      "faction": "Alliance",
+      "race": "Night Elf",
+      "class": "Druid",
+      "active_spec": "Balance",
+      "level": 80,
+      "equipped_item_level": 625,
+      "average_item_level": 625,
+      "achievement_points": 39920,
+      "last_login_timestamp": 1793954100000,
+      "is_online": true,
+      "location": "Bel'ameth - Amirdrassil",
+      "guild": {
+        "name": "Sentinels of Elune",
+        "rank": "Moon Warrior (Rank 1)",
+        "realm": "Stormrage"
+      },
+      "media": {
+        "avatar": "https://render.worldofwarcraft.com/us/icons/56/classicon_druid.jpg",
+        "inset": "https://render.worldofwarcraft.com/us/icons/56/classicon_druid.jpg",
+        "main_raw": "https://render.worldofwarcraft.com/us/icons/56/classicon_druid.jpg"
+      },
+      "stats": {
+        "health": 5790000,
+        "resource_type": "Astral Power",
+        "resource_amount": 100,
+        "strength": 1410,
+        "agility": 2180,
+        "intellect": 47850,
+        "stamina": 144750,
+        "armor": 9850,
+        "crit": 21.4,
+        "haste": 32.6,
+        "mastery": 44.1,
+        "versatility": 13.8,
+        "primary_stat_name": "Intellect",
+        "primary_stat_value": 47850
+      },
+      "equipment": [
+        {
+          "slot": "HEAD",
+          "slot_name": "Head",
+          "name": "Crown of the Crescent Moon",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_helmet_leather_raiddruid_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "NECK",
+          "slot_name": "Neck",
+          "name": "Pendant of Starlight Tears",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_necklace_105.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "SHOULDER",
+          "slot_name": "Shoulders",
+          "name": "Mantle of Amirdrassil's Bloom",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_shoulder_leather_raiddruid_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "BACK",
+          "slot_name": "Back",
+          "name": "Drape of the Night Warrior",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_cape_17.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "CHEST",
+          "slot_name": "Chest",
+          "name": "Vestments of the Emerald Dream",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_chest_leather_raiddruid_s_01.jpg",
+          "enchant": "Crystalline Radiance"
+        },
+        {
+          "slot": "WRIST",
+          "slot_name": "Wrist",
+          "name": "Bindings of Ashenvale",
+          "item_level": 623,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_bracer_leather_raiddruid_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "HANDS",
+          "slot_name": "Hands",
+          "name": "Handguards of Lunar Eclipse",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_glove_leather_raiddruid_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "WAIST",
+          "slot_name": "Waist",
+          "name": "Cinch of the World Tree",
+          "item_level": 623,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_belt_leather_raiddruid_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "LEGS",
+          "slot_name": "Legs",
+          "name": "Breeches of Elune's Grace",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_pant_leather_raiddruid_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "FEET",
+          "slot_name": "Feet",
+          "name": "Treads of Silent Starfall",
+          "item_level": 623,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_boot_leather_raiddruid_s_01.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "FINGER_1",
+          "slot_name": "Ring 1",
+          "name": "Ring of Hyjal's Summit",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_ring_142.jpg",
+          "enchant": "Radiant Haste"
+        },
+        {
+          "slot": "FINGER_2",
+          "slot_name": "Ring 2",
+          "name": "Band of Malfurion's Vow",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_ring_143.jpg",
+          "enchant": "Radiant Mastery"
+        },
+        {
+          "slot": "TRINKET_1",
+          "slot_name": "Trinket 1",
+          "name": "Blossom of Amirdrassil",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_herb_dreamfoil.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "TRINKET_2",
+          "slot_name": "Trinket 2",
+          "name": "Tear of Elune",
+          "item_level": 626,
+          "quality": "EPIC",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_gem_pearl_05.jpg",
+          "enchant": null
+        },
+        {
+          "slot": "MAIN_HAND",
+          "slot_name": "Main Hand",
+          "name": "Scythe of Elune",
+          "item_level": 636,
+          "quality": "LEGENDARY",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_staff_2h_artifactelune_d_01.jpg",
+          "enchant": "Authority of Radiant Power"
+        },
+        {
+          "slot": "OFF_HAND",
+          "slot_name": "Off Hand",
+          "name": "Two-Handed Equipped",
+          "item_level": 0,
+          "quality": "COMMON",
+          "icon": "https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg",
+          "enchant": null
+        }
+      ],
+      "activity": {
+        "quests_completed_total": 13450,
+        "hours_active_estimate": 4910,
+        "recent_quests": [
+          {
+            "title": "A New Home Under the Boughs",
+            "zone": "Bel'ameth",
+            "status": "Active Objective"
+          },
+          {
+            "title": "Blessing of the Moon Goddess",
+            "zone": "Emerald Dream",
+            "status": "Completed Recently"
+          },
+          {
+            "title": "Renewal of the Kaldorei",
+            "zone": "Amirdrassil",
+            "status": "Completed Recently"
+          }
+        ]
+      }
+    }
+  ]
+}
