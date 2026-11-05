@@ -653,19 +653,40 @@
           </span>
         </div>
 
-        <div>
-          <label for="charNameInput" class="block text-xs font-semibold uppercase tracking-wider text-wowgold-300 mb-1">
-            Character Name *
-          </label>
-          <input
-            id="charNameInput"
-            name="name"
-            type="text"
-            required
-            autocomplete="off"
-            placeholder="e.g. Slamson"
-            class="w-full px-3.5 py-2.5 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-wowgold-400"
-          />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label for="charFirstNameInput" class="block text-xs font-semibold uppercase tracking-wider text-wowgold-300 mb-1">
+              First Name *
+            </label>
+            <input
+              id="charFirstNameInput"
+              name="firstName"
+              type="text"
+              required
+              autocomplete="off"
+              placeholder="e.g. Slamson"
+              class="w-full px-3.5 py-2.5 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-wowgold-400"
+            />
+          </div>
+
+          <div>
+            <label for="charSecondNameInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
+              Second Name <span class="text-slate-500 font-normal">(Optional)</span>
+            </label>
+            <input
+              id="charSecondNameInput"
+              name="secondName"
+              type="text"
+              autocomplete="off"
+              placeholder="e.g. Atron"
+              class="w-full px-3.5 py-2.5 bg-obsidian-950 border border-slate-700 rounded-md text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-wowgold-400"
+            />
+          </div>
+        </div>
+
+        <div class="px-3 py-2 rounded bg-obsidian-950/70 border border-slate-800/80 flex items-center justify-between text-xs">
+          <span class="text-slate-400">Formatted Character ID:</span>
+          <code id="charNamePreview" class="text-wowgold-300 font-mono font-semibold">—</code>
         </div>
 
         <div id="addPlayerStatusMsg" class="hidden text-xs rounded-md px-3 py-2 border"></div>

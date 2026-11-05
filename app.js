@@ -212,12 +212,36 @@ function saveLocalEntries(entries) {
 }
 
 /**
+ * Format a hyphenated or single character name nicely for display (e.g. "slamson-slamson" -> "Slamson-Slamson").
+ */
+function formatCharacterDisplayName(name) {
+  return String(name || '')
+    .trim()
+    .split('-')
+    .filter(Boolean)
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join('-');
+}
+
+/**
+ * Combine first and optional second name into a sanitized slug:
+ * - Auto-allocates a hyphen in between when secondName is present
+ * - No hyphen if secondName is empty
+ */
+function combineFirstAndSecondName(firstName, secondName) {
+  const first = String(firstName || '').trim().toLowerCase().replace(/^-+|-+$/g, '');
+  const second = String(secondName || '').trim().toLowerCase().replace(/^-+|-+$/g, '');
+  if (!first) return '';
+  return second ? `${first}-${second}` : first;
+}
+
+/**
  * Build a clean queued character representation for locally added Maladath players
  * before their snapshot is populated by `fetch-stats.js` in GitHub Actions.
  */
 function buildQueuedMaladathProfile(entry) {
   const cleanName = String(entry.name || '').trim().toLowerCase();
-  const formattedName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+  const formattedName = formatCharacterDisplayName(cleanName);
   const id = `${HARDCODED_REGION}-${HARDCODED_REALM_SLUG}-${cleanName}`;
 
   const equipment = ARMORY_SLOTS.map(slotDef => ({
@@ -299,7 +323,14 @@ function mergeCharacterRoster() {
   for (const staticChar of state.staticCharacters) {
     if (staticChar && staticChar.name) {
       const charId = (staticChar.id || `${HARDCODED_REGION}-${HARDCODED_REALM_SLUG}-${staticChar.name}`).toLowerCase();
-      byId.set(charId, { ...staticChar, id: charId, is_local: false });
+      const displayName = formatCharacterDisplayName(staticChar.name);
+      byId.set(charId, {
+        ...staticChar,
+        id: charId,
+        name: displayName,
+        formatted_title: staticChar.formatted_title || displayName,
+        is_local: false
+      });
     }
   }
 
@@ -742,13 +773,24 @@ function closeCharacterDetailModal() {
 /* MODAL 2 & 3: ADD PLAYER & EXPORT CHARACTERS.JSON                           */
 /* ========================================================================== */
 
+function updateCharacterNamePreview() {
+  const firstEl = document.getElementById('charFirstNameInput');
+  const secondEl = document.getElementById('charSecondNameInput');
+  const previewEl = document.getElementById('charNamePreview');
+  if (!previewEl) return;
+
+  const combined = combineFirstAndSecondName(firstEl?.value, secondEl?.value);
+  previewEl.textContent = combined || '—';
+}
+
 function openAddPlayerModal() {
   const modal = document.getElementById('addPlayerModal');
   const statusMsg = document.getElementById('addPlayerStatusMsg');
   if (statusMsg) statusMsg.classList.add('hidden');
+  updateCharacterNamePreview();
   modal.classList.remove('hidden');
   document.body.classList.add('overflow-hidden');
-  setTimeout(() => document.getElementById('charNameInput')?.focus(), 50);
+  setTimeout(() => document.getElementById('charFirstNameInput')?.focus(), 50);
 }
 
 function closeAddPlayerModal() {
@@ -895,11 +937,18 @@ function setupEventListeners() {
     }
   });
 
-  // Submit Simplified Add Player Form (Character Name ONLY; Realm: maladath, Region: us)
+  // Live preview of First Name + Optional Second Name hyphenation
+  document.getElementById('charFirstNameInput')?.addEventListener('input', updateCharacterNamePreview);
+  document.getElementById('charSecondNameInput')?.addEventListener('input', updateCharacterNamePreview);
+
+  // Submit Add Player Form (First Name + Optional Second Name; auto-hyphenated; Realm: maladath, Region: us)
   document.getElementById('addPlayerForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const sanitizedName = String(formData.get('name') || '').trim().toLowerCase();
+    const sanitizedName = combineFirstAndSecondName(
+      formData.get('firstName'),
+      formData.get('secondName')
+    );
     if (!sanitizedName) return;
 
     const cleanEntry = {
@@ -915,6 +964,7 @@ function setupEventListeners() {
     saveLocalEntries(state.localEntries);
 
     e.target.reset();
+    updateCharacterNamePreview();
     closeAddPlayerModal();
     mergeCharacterRoster();
     populateDynamicFilterOptions();

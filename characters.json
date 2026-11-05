@@ -1,6 +1,11 @@
 [
   {
-    "name": "slamson",
+    "name": "slamson-slamson",
+    "realm": "maladath",
+    "region": "us"
+  },
+  {
+    "name": "floreat-atron",
     "realm": "maladath",
     "region": "us"
   }
