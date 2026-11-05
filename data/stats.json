@@ -44,9 +44,11 @@
   ],
   "characters": [
     {
-      "name": "slamson-slamson",
-      "realm": "maladath",
+      "name": "slamson",
+      "realm": "PvP",
+      "region": "us",
       "level": "?",
+      "race": "Pending API Sync",
       "class": "Adventurer",
       "spec": "Unknown",
       "equippedItemLevel": 0,
@@ -55,19 +57,26 @@
       "online": false,
       "lastLogin": null,
       "stats": {
+        "health": 0,
+        "power": 0,
+        "strength": 0,
+        "agility": 0,
+        "intellect": 0,
+        "stamina": 0,
         "crit": 0,
         "haste": 0,
         "mastery": 0,
-        "versatility": 0,
-        "stamina": 0,
-        "health": 0
+        "versatility": 0
       },
-      "pending": true
+      "pending": true,
+      "lastUpdated": "2026-11-05T23:49:00.000Z"
     },
     {
-      "name": "floreat-atron",
-      "realm": "maladath",
+      "name": "floreat",
+      "realm": "PvP",
+      "region": "us",
       "level": "?",
+      "race": "Pending API Sync",
       "class": "Adventurer",
       "spec": "Unknown",
       "equippedItemLevel": 0,
@@ -76,19 +85,26 @@
       "online": false,
       "lastLogin": null,
       "stats": {
+        "health": 0,
+        "power": 0,
+        "strength": 0,
+        "agility": 0,
+        "intellect": 0,
+        "stamina": 0,
         "crit": 0,
         "haste": 0,
         "mastery": 0,
-        "versatility": 0,
-        "stamina": 0,
-        "health": 0
+        "versatility": 0
       },
-      "pending": true
+      "pending": true,
+      "lastUpdated": "2026-11-05T23:49:00.000Z"
     },
     {
-      "name": "nuff-atron",
-      "realm": "maladath",
+      "name": "nuff",
+      "realm": "PvP",
+      "region": "us",
       "level": "?",
+      "race": "Pending API Sync",
       "class": "Adventurer",
       "spec": "Unknown",
       "equippedItemLevel": 0,
@@ -97,14 +113,19 @@
       "online": false,
       "lastLogin": null,
       "stats": {
+        "health": 0,
+        "power": 0,
+        "strength": 0,
+        "agility": 0,
+        "intellect": 0,
+        "stamina": 0,
         "crit": 0,
         "haste": 0,
         "mastery": 0,
-        "versatility": 0,
-        "stamina": 0,
-        "health": 0
+        "versatility": 0
       },
-      "pending": true
+      "pending": true,
+      "lastUpdated": "2026-11-05T23:49:00.000Z"
     }
   ]
 }

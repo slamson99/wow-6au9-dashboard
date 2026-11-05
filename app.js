@@ -9,14 +9,15 @@
  * - Exports clean `[{ "name": "...", "realm": "maladath", "region": "us" }]` JSON
  */
 
-const LOCAL_STORAGE_KEY = 'wow_maladath_roster_v1';
+const LOCAL_STORAGE_KEY = 'wow_forever_pvp_roster_v1';
 const LEGACY_STORAGE_KEYS = [
   'wow_forever_local_characters_v1',
-  'wow_forever_local_characters_v2'
+  'wow_forever_local_characters_v2',
+  'wow_maladath_roster_v1'
 ];
 
-const HARDCODED_REALM_SLUG = 'maladath';
-const HARDCODED_REALM_NAME = 'Maladath';
+const HARDCODED_REALM_SLUG = 'pvp';
+const HARDCODED_REALM_NAME = 'PvP';
 const HARDCODED_REGION = 'us';
 const DEFAULT_ONLINE_THRESHOLD_MINUTES = 30;
 
@@ -874,14 +875,14 @@ function closeAddPlayerModal() {
 }
 
 /**
- * Formats the combined Maladath roster cleanly as:
+ * Formats the combined WoW Forever PvP roster cleanly as:
  * [
- *   { "name": "slamson", "realm": "maladath", "region": "us" }
+ *   { "name": "slamson", "realm": "pvp", "region": "us" }
  * ]
  */
 function buildCharactersJsonExportPayload() {
   return state.mergedCharacters.map(c => ({
-    name: String(c.name || '').trim().toLowerCase(),
+    name: String(c.name || '').trim().toLowerCase().split(/[-\s]+/)[0],
     realm: HARDCODED_REALM_SLUG,
     region: HARDCODED_REGION
   }));

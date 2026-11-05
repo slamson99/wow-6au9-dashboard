@@ -1,17 +1,17 @@
 [
   {
-    "name": "slamson-slamson",
-    "realm": "maladath",
+    "name": "slamson",
+    "realm": "pvp",
     "region": "us"
   },
   {
-    "name": "floreat-atron",
-    "realm": "maladath",
+    "name": "floreat",
+    "realm": "pvp",
     "region": "us"
   },
   {
-    "name": "nuff-atron",
-    "realm": "maladath",
+    "name": "nuff",
+    "realm": "pvp",
     "region": "us"
   }
 ]
