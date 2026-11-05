@@ -1,27 +1,7 @@
 [
   {
-    "name": "thrall",
-    "realm": "area-52",
-    "region": "us"
-  },
-  {
-    "name": "jaina",
-    "realm": "proudmoore",
-    "region": "us"
-  },
-  {
-    "name": "arthas",
-    "realm": "illidan",
-    "region": "us"
-  },
-  {
-    "name": "sylvanas",
-    "realm": "silvermoon",
-    "region": "eu"
-  },
-  {
-    "name": "tyrande",
-    "realm": "stormrage",
+    "name": "slamson",
+    "realm": "maladath",
     "region": "us"
   }
 ]

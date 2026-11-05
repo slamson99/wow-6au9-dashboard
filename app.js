@@ -2,17 +2,22 @@
  * app.js
  * ----------------------------------------------------------------------------
  * Client-side application logic for the WoW Forever Roster Dashboard.
- * - Loads static snapshot data from ./data/stats.json
- * - Merges locally tracked characters from localStorage
- * - Automatically resolves character profile stats on Add Character (or queues
- *   a clean `{ name, realm, region }` entry for automated Battle.net sync)
+ * - Hardcoded to Realm: Maladath (Oceanic) | Region: US
+ * - Loads static snapshot data strictly from ./data/stats.json (no mock fallbacks)
+ * - Purges legacy localStorage keys and stores user-added Maladath characters
  * - Supports searching, class/spec/status filtering, and responsive modals
- * - Formats relative timestamps, official WoW class colors, and item quality borders
- * - Exports clean `[{ "name": "...", "realm": "...", "region": "..." }]` JSON
+ * - Exports clean `[{ "name": "...", "realm": "maladath", "region": "us" }]` JSON
  */
 
-const LOCAL_STORAGE_KEY = 'wow_forever_local_characters_v2';
-const LEGACY_STORAGE_KEY = 'wow_forever_local_characters_v1';
+const LOCAL_STORAGE_KEY = 'wow_maladath_roster_v1';
+const LEGACY_STORAGE_KEYS = [
+  'wow_forever_local_characters_v1',
+  'wow_forever_local_characters_v2'
+];
+
+const HARDCODED_REALM_SLUG = 'maladath';
+const HARDCODED_REALM_NAME = 'Maladath';
+const HARDCODED_REGION = 'us';
 const DEFAULT_ONLINE_THRESHOLD_MINUTES = 30;
 
 /** Official Blizzard Class Color Palette */
@@ -49,24 +54,7 @@ const WOW_CLASS_ICONS = {
   'Warrior': 'https://render.worldofwarcraft.com/us/icons/56/classicon_warrior.jpg'
 };
 
-/** Default Primary Attribute per Class */
-const CLASS_PRIMARY_STAT = {
-  'Death Knight': 'Strength',
-  'Paladin': 'Strength',
-  'Warrior': 'Strength',
-  'Demon Hunter': 'Agility',
-  'Hunter': 'Agility',
-  'Monk': 'Agility',
-  'Rogue': 'Agility',
-  'Druid': 'Intellect',
-  'Evoker': 'Intellect',
-  'Mage': 'Intellect',
-  'Priest': 'Intellect',
-  'Shaman': 'Intellect',
-  'Warlock': 'Intellect'
-};
-
-/** 16 Armory Slots for Paper-Doll Generation */
+/** 16 Armory Slots for Paper-Doll Display */
 const ARMORY_SLOTS = [
   { slot: 'HEAD', slot_name: 'Head', icon: 'https://render.worldofwarcraft.com/us/icons/56/inv_helmet_03.jpg' },
   { slot: 'NECK', slot_name: 'Neck', icon: 'https://render.worldofwarcraft.com/us/icons/56/inv_jewelry_necklace_07.jpg' },
@@ -86,39 +74,10 @@ const ARMORY_SLOTS = [
   { slot: 'OFF_HAND', slot_name: 'Off Hand', icon: 'https://render.worldofwarcraft.com/us/icons/56/inv_shield_06.jpg' }
 ];
 
-/** Formatted Realm Display Names for Oceanic / US / EU Servers */
-const REALM_DISPLAY_NAMES = {
-  'frostmourne': 'Frostmourne',
-  'barthilas': 'Barthilas',
-  'saurfang': 'Saurfang',
-  'caelestrasz': 'Caelestrasz',
-  'jubeithos': "Jubei'Thos",
-  'khazgoroth': "Khaz'goroth",
-  'amanthul': "Aman'Thul",
-  'nagrand': 'Nagrand',
-  'thaurissan': 'Thaurissan',
-  'dreadmaul': 'Dreadmaul',
-  'gundrak': 'Gundrak',
-  'dathremar': "Dath'Remar",
-  'area-52': 'Area 52',
-  'illidan': 'Illidan',
-  'stormrage': 'Stormrage',
-  'proudmoore': 'Proudmoore',
-  'tichondrius': 'Tichondrius',
-  'whitemane': 'Whitemane',
-  'arugal': 'Arugal',
-  'yojamba': 'Yojamba',
-  'remulos': 'Remulos',
-  'silvermoon': 'Silvermoon',
-  'tarren-mill': 'Tarren Mill',
-  'draenor': 'Draenor',
-  'kazzak': 'Kazzak'
-};
-
 /** Application State */
 const state = {
   staticCharacters: [],
-  localEntries: [], // Array of { name, realm, region, profile? }
+  localEntries: [], // Array of { name: "lowercase", realm: "maladath", region: "us" }
   mergedCharacters: [],
   onlineThresholdMinutes: DEFAULT_ONLINE_THRESHOLD_MINUTES,
   snapshotUpdatedAt: null,
@@ -155,33 +114,6 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
-}
-
-/**
- * Convert any user-entered realm string (e.g. "Jubei'Thos" or "Area 52") into a Blizzard API slug.
- */
-function toRealmSlug(input) {
-  return String(input || '')
-    .trim()
-    .toLowerCase()
-    .replace(/['’]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
-/**
- * Format realm slug (e.g., "frostmourne" or "jubeithos") into display name.
- */
-function formatRealmDisplayName(slug) {
-  if (!slug) return 'Unknown Realm';
-  const clean = toRealmSlug(slug);
-  if (REALM_DISPLAY_NAMES[clean]) {
-    return REALM_DISPLAY_NAMES[clean];
-  }
-  return clean
-    .split('-')
-    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
 }
 
 /**
@@ -230,28 +162,38 @@ function formatRelativeTime(timestamp, isOnlineFlag) {
 }
 
 /* ========================================================================== */
-/* LOCAL STORAGE & AUTOMATED PROFILE RESOLUTION                               */
+/* LOCAL STORAGE & MALADATH ROSTER MANAGEMENT                                 */
 /* ========================================================================== */
 
-function loadLocalEntries() {
+/**
+ * Purge any legacy localStorage keys so old dummy or non-Maladath characters never reappear.
+ */
+function purgeLegacyLocalStorage() {
   try {
-    const raw = localStorage.getItem(LOCAL_STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
+    for (const oldKey of LEGACY_STORAGE_KEYS) {
+      localStorage.removeItem(oldKey);
+    }
+  } catch (err) {
+    console.warn('Unable to clear legacy localStorage keys:', err);
+  }
+}
+
+function loadLocalEntries() {
+  purgeLegacyLocalStorage();
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
 
-    // Normalize any legacy or minimal `{ name, realm, region }` entries
     return parsed
       .map(item => {
-        const name = String(item.name || '').trim().toLowerCase();
-        const realm = toRealmSlug(item.realm?.slug || item.realm || 'frostmourne');
-        const region = String(item.region || 'us').trim().toLowerCase();
-        if (!name || !realm) return null;
+        const cleanName = String(item.name || '').trim().toLowerCase();
+        if (!cleanName) return null;
         return {
-          name,
-          realm,
-          region,
-          profile: item.profile || (item.stats ? item : null)
+          name: cleanName,
+          realm: HARDCODED_REALM_SLUG,
+          region: HARDCODED_REGION
         };
       })
       .filter(Boolean);
@@ -270,178 +212,13 @@ function saveLocalEntries(entries) {
 }
 
 /**
- * Attempt an automated client-side public profile lookup (Raider.IO public CORS API
- * mirrors Battle.net Armory character metadata without exposing client secrets).
- * Falls back gracefully to a queued snapshot card if the character is Classic-only or private.
+ * Build a clean queued character representation for locally added Maladath players
+ * before their snapshot is populated by `fetch-stats.js` in GitHub Actions.
  */
-async function fetchAutomatedCharacterPreview(name, realmSlug, region) {
-  const cleanName = encodeURIComponent(name.trim().toLowerCase());
-  const cleanRealm = encodeURIComponent(toRealmSlug(realmSlug));
-  const cleanRegion = encodeURIComponent((region || 'us').toLowerCase());
-
-  // 1. Check if character already exists in static ./data/stats.json
-  const existingStatic = state.staticCharacters.find(
-    c =>
-      c.name?.toLowerCase() === name.trim().toLowerCase() &&
-      toRealmSlug(c.realm?.slug || c.realm?.name) === toRealmSlug(realmSlug) &&
-      (c.region || 'us').toLowerCase() === (region || 'us').toLowerCase()
-  );
-  if (existingStatic) {
-    return { ...existingStatic, is_local: false };
-  }
-
-  // 2. Query public Armory mirror (CORS-enabled) for instant race/class/spec/ilvl/guild/avatar
-  try {
-    const url = `https://raider.io/api/v1/characters/profile?region=${cleanRegion}&realm=${cleanRealm}&name=${cleanName}&fields=gear,guild`;
-    const response = await fetch(url);
-    if (response.ok) {
-      const data = await response.json();
-      const className = data.class || 'Warrior';
-      const specName = data.active_spec_name || 'General';
-      const raceName = data.race || 'Azerothian';
-      const ilvl = Math.round(data.gear?.item_level_equipped || 615);
-      const avgIlvl = Math.round(data.gear?.item_level_total || ilvl);
-      const primaryStatName = CLASS_PRIMARY_STAT[className] || 'Strength';
-      const scaledPrimary = Math.round(ilvl * 78);
-      const scaledStamina = Math.round(ilvl * 230);
-
-      // Map any gear items returned by the profile lookup into our 16-slot Armory
-      const gearItems = data.gear?.items || {};
-      const slotMap = {
-        HEAD: gearItems.head,
-        NECK: gearItems.neck,
-        SHOULDER: gearItems.shoulder,
-        BACK: gearItems.back,
-        CHEST: gearItems.chest,
-        WRIST: gearItems.wrist,
-        HANDS: gearItems.hands,
-        WAIST: gearItems.waist,
-        LEGS: gearItems.legs,
-        FEET: gearItems.feet,
-        FINGER_1: gearItems.finger1,
-        FINGER_2: gearItems.finger2,
-        TRINKET_1: gearItems.trinket1,
-        TRINKET_2: gearItems.trinket2,
-        MAIN_HAND: gearItems.mainhand,
-        OFF_HAND: gearItems.offhand
-      };
-
-      const rarityMap = {
-        0: 'POOR',
-        1: 'COMMON',
-        2: 'UNCOMMON',
-        3: 'RARE',
-        4: 'EPIC',
-        5: 'LEGENDARY'
-      };
-
-      const equipment = ARMORY_SLOTS.map(slotDef => {
-        const raw = slotMap[slotDef.slot];
-        if (raw) {
-          return {
-            slot: slotDef.slot,
-            slot_name: slotDef.slot_name,
-            name: raw.name || `${slotDef.slot_name}`,
-            item_level: raw.item_level || ilvl,
-            quality: rarityMap[raw.item_quality] || 'EPIC',
-            icon: raw.icon
-              ? `https://render.worldofwarcraft.com/us/icons/56/${raw.icon}.jpg`
-              : slotDef.icon,
-            enchant: raw.enchant ? `Enchant #${raw.enchant}` : null
-          };
-        }
-        return {
-          slot: slotDef.slot,
-          slot_name: slotDef.slot_name,
-          name: 'Empty / Unsynced Slot',
-          item_level: 0,
-          quality: 'POOR',
-          icon: slotDef.icon,
-          enchant: null
-        };
-      });
-
-      const formattedName = data.name || (name.charAt(0).toUpperCase() + name.slice(1).toLowerCase());
-
-      return {
-        id: `${region.toLowerCase()}-${toRealmSlug(realmSlug)}-${name.trim().toLowerCase()}`,
-        is_local: true,
-        name: formattedName,
-        title: 'Champion %s',
-        formatted_title: `Champion ${formattedName}`,
-        realm: {
-          name: data.realm || formatRealmDisplayName(realmSlug),
-          slug: toRealmSlug(realmSlug)
-        },
-        region: region.toLowerCase(),
-        faction: data.faction === 'horde' ? 'Horde' : 'Alliance',
-        race: raceName,
-        class: className,
-        active_spec: specName,
-        level: 80,
-        equipped_item_level: ilvl,
-        average_item_level: avgIlvl,
-        achievement_points: data.achievement_points || 15000,
-        last_login_timestamp: data.last_crawled_at ? new Date(data.last_crawled_at).getTime() : Date.now(),
-        is_online: false,
-        location: data.faction === 'horde' ? 'Orgrimmar - Valley of Strength' : 'Stormwind City',
-        guild: data.guild?.name
-          ? {
-              name: data.guild.name,
-              rank: 'Guild Member',
-              realm: data.guild.realm || formatRealmDisplayName(realmSlug)
-            }
-          : null,
-        media: {
-          avatar: data.thumbnail_url || getClassIcon(className),
-          inset: data.thumbnail_url || getClassIcon(className),
-          main_raw: data.thumbnail_url || getClassIcon(className)
-        },
-        stats: {
-          health: scaledStamina * 40,
-          resource_type: 'Resource',
-          resource_amount: 100,
-          strength: primaryStatName === 'Strength' ? scaledPrimary : 1450,
-          agility: primaryStatName === 'Agility' ? scaledPrimary : 1620,
-          intellect: primaryStatName === 'Intellect' ? scaledPrimary : 1380,
-          stamina: scaledStamina,
-          armor: Math.round(ilvl * 22),
-          crit: 26.4,
-          haste: 23.8,
-          mastery: 35.2,
-          versatility: 11.4,
-          primary_stat_name: primaryStatName,
-          primary_stat_value: scaledPrimary
-        },
-        equipment,
-        activity: {
-          quests_completed_total: 6500,
-          hours_active_estimate: Math.max(120, Math.round((data.achievement_points || 12000) / 8)),
-          recent_quests: [
-            { title: 'Live Profile Resolved via Armory Lookup', zone: formatRealmDisplayName(realmSlug), status: 'Active Sync' },
-            { title: 'Export characters.json for Full Battle.net Action Updates', zone: 'GitHub Actions', status: 'Ready' }
-          ]
-        }
-      };
-    }
-  } catch (err) {
-    console.warn('Instant public Armory lookup unavailable, creating queued snapshot card:', err.message);
-  }
-
-  // 3. Fallback: Build a clean queued snapshot card from `{ name, realm, region }` without manual stat entry
-  return buildQueuedSnapshotProfile({ name, realm: realmSlug, region });
-}
-
-/**
- * Build a clean placeholder character profile when only `{ name, realm, region }` is known
- * and full Battle.net OAuth2 stats will be populated by `fetch-stats.js` in GitHub Actions.
- */
-function buildQueuedSnapshotProfile(entry) {
-  const rawName = String(entry.name || 'Champion').trim();
-  const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
-  const cleanRealmSlug = toRealmSlug(entry.realm || 'frostmourne');
-  const cleanRegion = String(entry.region || 'us').toLowerCase();
-  const id = `${cleanRegion}-${cleanRealmSlug}-${rawName.toLowerCase()}`;
+function buildQueuedMaladathProfile(entry) {
+  const cleanName = String(entry.name || '').trim().toLowerCase();
+  const formattedName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+  const id = `${HARDCODED_REGION}-${HARDCODED_REALM_SLUG}-${cleanName}`;
 
   const equipment = ARMORY_SLOTS.map(slotDef => ({
     slot: slotDef.slot,
@@ -457,15 +234,15 @@ function buildQueuedSnapshotProfile(entry) {
     id,
     is_local: true,
     name: formattedName,
-    title: 'Queued for Battle.net API Sync',
-    formatted_title: `${formattedName} — Pending Armory Snapshot`,
+    title: '',
+    formatted_title: formattedName,
     realm: {
-      name: formatRealmDisplayName(cleanRealmSlug),
-      slug: cleanRealmSlug
+      name: HARDCODED_REALM_NAME,
+      slug: HARDCODED_REALM_SLUG
     },
-    region: cleanRegion,
+    region: HARDCODED_REGION,
     faction: 'Azeroth',
-    race: 'Champion',
+    race: 'Pending API Sync',
     class: 'Warrior',
     active_spec: 'Armory Queued',
     level: '—',
@@ -474,12 +251,8 @@ function buildQueuedSnapshotProfile(entry) {
     achievement_points: 0,
     last_login_timestamp: 0,
     is_online: false,
-    location: `${formatRealmDisplayName(cleanRealmSlug)} (${cleanRegion.toUpperCase()})`,
-    guild: {
-      name: 'Pending Battle.net API Snapshot',
-      rank: 'Export JSON to Sync',
-      realm: formatRealmDisplayName(cleanRealmSlug)
-    },
+    location: 'Maladath (Oceanic)',
+    guild: null,
     media: {
       avatar: 'https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg',
       inset: 'https://render.worldofwarcraft.com/us/icons/56/inv_misc_questionmark.jpg',
@@ -506,33 +279,34 @@ function buildQueuedSnapshotProfile(entry) {
       quests_completed_total: 0,
       hours_active_estimate: 0,
       recent_quests: [
-        { title: 'Added to Roster Queue', zone: formatRealmDisplayName(cleanRealmSlug), status: 'Active Queue' },
-        { title: 'Click "Export JSON" & commit to characters.json for GitHub Actions sync', zone: 'GitHub Actions', status: 'Next Step' }
+        {
+          title: 'Queued for Battle.net Snapshot Sync (fetch-stats.js)',
+          zone: 'Maladath (Oceanic)',
+          status: 'Queued'
+        }
       ]
     }
   };
 }
 
 /**
- * Merge static characters from `./data/stats.json` with locally tracked `{ name, realm, region }` entries.
- * If a locally tracked character is present in `stats.json`, the official Battle.net snapshot is used.
+ * Merge static characters loaded from `./data/stats.json` with locally added Maladath entries.
+ * Never injects mock fallback characters.
  */
 function mergeCharacterRoster() {
   const byId = new Map();
 
   for (const staticChar of state.staticCharacters) {
-    if (staticChar && staticChar.id) {
-      byId.set(staticChar.id.toLowerCase(), { ...staticChar, is_local: false });
+    if (staticChar && staticChar.name) {
+      const charId = (staticChar.id || `${HARDCODED_REGION}-${HARDCODED_REALM_SLUG}-${staticChar.name}`).toLowerCase();
+      byId.set(charId, { ...staticChar, id: charId, is_local: false });
     }
   }
 
   for (const entry of state.localEntries) {
-    const id = `${entry.region}-${toRealmSlug(entry.realm)}-${entry.name.toLowerCase()}`;
+    const id = `${HARDCODED_REGION}-${HARDCODED_REALM_SLUG}-${entry.name.toLowerCase()}`;
     if (!byId.has(id)) {
-      const profile = entry.profile
-        ? { ...entry.profile, id, is_local: true }
-        : buildQueuedSnapshotProfile(entry);
-      byId.set(id, profile);
+      byId.set(id, buildQueuedMaladathProfile(entry));
     }
   }
 
@@ -617,7 +391,7 @@ function updateHeaderStatusUI() {
   const totalCount = state.mergedCharacters.length;
   const localCount = state.mergedCharacters.filter(c => c.is_local).length;
 
-  countEl.textContent = `${totalCount} Champions (${onlineCount} Online${localCount > 0 ? ` • ${localCount} Local` : ''})`;
+  countEl.textContent = `${totalCount} Champion${totalCount === 1 ? '' : 's'} on Maladath (${onlineCount} Online${localCount > 0 ? ` • ${localCount} Local` : ''})`;
 
   if (state.snapshotUpdatedAt) {
     const updatedDate = new Date(state.snapshotUpdatedAt);
@@ -632,7 +406,7 @@ function updateHeaderStatusUI() {
   } else {
     statusEl.innerHTML = `
       <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-      <span>Offline / Local Roster Mode</span>
+      <span>Maladath Roster Mode</span>
     `;
   }
 }
@@ -726,9 +500,9 @@ function renderCharacterCards() {
             <div class="flex items-center justify-between gap-2 mt-3.5 pt-2.5 border-t border-slate-800/80 text-xs">
               <div class="flex items-center gap-1.5 text-slate-300 truncate">
                 <span class="uppercase font-bold text-[10px] px-1.5 py-0.5 rounded bg-obsidian-950 border border-slate-700 text-wowgold-300">
-                  ${escapeHtml((char.region || 'us').toUpperCase())}
+                  ${escapeHtml((char.region || HARDCODED_REGION).toUpperCase())}
                 </span>
-                <span class="truncate font-medium">${escapeHtml(char.realm?.name || char.realm?.slug)}</span>
+                <span class="truncate font-medium">${escapeHtml(char.realm?.name || HARDCODED_REALM_NAME)}</span>
               </div>
               <div class="shrink-0">
                 ${statusBadgeHtml}
@@ -742,8 +516,8 @@ function renderCharacterCards() {
               <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            <span class="text-slate-300 truncate" title="${escapeHtml(char.location || 'Azeroth')}">
-              ${escapeHtml(char.location || 'Azeroth')}
+            <span class="text-slate-300 truncate" title="${escapeHtml(char.location || 'Maladath (Oceanic)')}">
+              ${escapeHtml(char.location || 'Maladath (Oceanic)')}
             </span>
           </div>
 
@@ -766,7 +540,7 @@ function renderCharacterCards() {
 
         <!-- Card Footer Prompt -->
         <div class="px-4 py-2 bg-obsidian-950/90 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-          <span class="truncate">${escapeHtml(char.guild?.name ? `<${char.guild.name}>` : 'Unguilded Champion')}</span>
+          <span class="truncate">${escapeHtml(char.guild?.name ? `<${char.guild.name}>` : 'Maladath Roster')}</span>
           <span class="text-wowgold-400 font-semibold flex items-center gap-1 shrink-0">
             Inspect Armory
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -811,7 +585,7 @@ function openCharacterDetailModal(charId) {
   avatarEl.onerror = () => { avatarEl.src = getClassIcon(char.class); };
   avatarEl.style.borderColor = classColor;
 
-  document.getElementById('detailModalLevelBadge').textContent = `Lv ${char.level || 80}`;
+  document.getElementById('detailModalLevelBadge').textContent = `Lv ${char.level || '—'}`;
 
   const nameEl = document.getElementById('detailModalName');
   nameEl.textContent = char.name;
@@ -842,15 +616,15 @@ function openCharacterDetailModal(charId) {
 
   document.getElementById('detailModalGuildLine').textContent = char.guild?.name
     ? `<${char.guild.name}> (${char.guild.rank || 'Member'})`
-    : 'No Guild Affiliation';
+    : 'Maladath Champion';
 
   document.getElementById('detailModalRealmLine').textContent =
-    `${char.realm?.name || char.realm?.slug} (${(char.region || 'us').toUpperCase()})`;
+    `${char.realm?.name || HARDCODED_REALM_NAME} (${(char.region || HARDCODED_REGION).toUpperCase()})`;
 
   // Summary Ribbon
   document.getElementById('detailModalIlvl').textContent = char.equipped_item_level ?? '—';
   document.getElementById('detailModalAvgIlvl').textContent = `(${char.average_item_level || char.equipped_item_level || '—'} Avg)`;
-  document.getElementById('detailModalLocation').textContent = char.location || 'Azeroth';
+  document.getElementById('detailModalLocation').textContent = char.location || 'Maladath (Oceanic)';
 
   const lastSeenEl = document.getElementById('detailModalLastSeen');
   lastSeenEl.textContent = online ? 'Active in World' : relativeSeen;
@@ -885,7 +659,7 @@ function openCharacterDetailModal(charId) {
 
   const quests = Array.isArray(char.activity?.recent_quests) && char.activity.recent_quests.length > 0
     ? char.activity.recent_quests
-    : [{ title: 'Adventuring across Azeroth', zone: char.location || 'Azeroth', status: 'Active' }];
+    : [{ title: 'Adventuring on Maladath', zone: char.location || 'Maladath (Oceanic)', status: 'Active' }];
 
   document.getElementById('detailModalQuestList').innerHTML = quests.map(q => {
     const isCurrent = String(q.status || '').toLowerCase().includes('active');
@@ -897,7 +671,7 @@ function openCharacterDetailModal(charId) {
       <li class="p-2.5 rounded bg-obsidian-900/90 border border-slate-800/90 flex items-start justify-between gap-2">
         <div class="min-w-0">
           <p class="text-xs font-semibold text-slate-100 truncate">${escapeHtml(q.title)}</p>
-          <p class="text-[11px] text-slate-400 truncate mt-0.5">${escapeHtml(q.zone || 'Azeroth')}</p>
+          <p class="text-[11px] text-slate-400 truncate mt-0.5">${escapeHtml(q.zone || 'Maladath')}</p>
         </div>
         <span class="text-[10px] px-2 py-0.5 rounded border shrink-0 font-medium ${badgeCls}">
           ${escapeHtml(q.status || 'Completed')}
@@ -912,7 +686,7 @@ function openCharacterDetailModal(charId) {
     : ARMORY_SLOTS.map(s => ({
         slot: s.slot,
         slot_name: s.slot_name,
-        name: 'Empty Slot',
+        name: `${s.slot_name} (Pending API Sync)`,
         item_level: 0,
         quality: 'POOR',
         icon: s.icon,
@@ -984,16 +758,16 @@ function closeAddPlayerModal() {
 }
 
 /**
- * Formats the combined roster cleanly as:
+ * Formats the combined Maladath roster cleanly as:
  * [
- *   { "name": "charactername", "realm": "frostmourne", "region": "us" }
+ *   { "name": "slamson", "realm": "maladath", "region": "us" }
  * ]
  */
 function buildCharactersJsonExportPayload() {
   return state.mergedCharacters.map(c => ({
     name: String(c.name || '').trim().toLowerCase(),
-    realm: toRealmSlug(c.realm?.slug || c.realm?.name || 'frostmourne'),
-    region: String(c.region || 'us').trim().toLowerCase()
+    realm: HARDCODED_REALM_SLUG,
+    region: HARDCODED_REGION
   }));
 }
 
@@ -1032,6 +806,7 @@ async function fetchStaticSnapshot() {
     state.snapshotUpdatedAt = payload.updated_at || null;
   } catch (err) {
     console.warn('Could not load ./data/stats.json snapshot:', err.message);
+    state.staticCharacters = [];
   } finally {
     if (refreshIcon) {
       setTimeout(() => refreshIcon.classList.remove('animate-spin'), 350);
@@ -1101,7 +876,7 @@ function setupEventListeners() {
   document.getElementById('deleteLocalCharBtn').addEventListener('click', () => {
     if (!state.activeCharacterId) return;
     state.localEntries = state.localEntries.filter(entry => {
-      const entryId = `${entry.region}-${toRealmSlug(entry.realm)}-${entry.name.toLowerCase()}`;
+      const entryId = `${HARDCODED_REGION}-${HARDCODED_REALM_SLUG}-${entry.name.toLowerCase()}`;
       return entryId !== state.activeCharacterId.toLowerCase();
     });
     saveLocalEntries(state.localEntries);
@@ -1110,24 +885,6 @@ function setupEventListeners() {
     populateDynamicFilterOptions();
     renderCharacterCards();
   });
-
-  // Toggle Custom Realm Input when "__custom__" is chosen in Realm dropdown
-  const realmSelectEl = document.getElementById('realmSelect');
-  const customRealmContainerEl = document.getElementById('customRealmContainer');
-  const customRealmInputEl = document.getElementById('customRealmInput');
-
-  if (realmSelectEl) {
-    realmSelectEl.addEventListener('change', (e) => {
-      if (e.target.value === '__custom__') {
-        customRealmContainerEl.classList.remove('hidden');
-        customRealmInputEl.required = true;
-        customRealmInputEl.focus();
-      } else {
-        customRealmContainerEl.classList.add('hidden');
-        customRealmInputEl.required = false;
-      }
-    });
-  }
 
   // Add Player Modal Listeners
   document.getElementById('closeAddPlayerModalBtn').addEventListener('click', closeAddPlayerModal);
@@ -1138,57 +895,30 @@ function setupEventListeners() {
     }
   });
 
-  // Submit Simplified Add Player Form (Character Name, Realm, Region ONLY)
-  document.getElementById('addPlayerForm').addEventListener('submit', async (e) => {
+  // Submit Simplified Add Player Form (Character Name ONLY; Realm: maladath, Region: us)
+  document.getElementById('addPlayerForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const rawName = String(formData.get('name') || '').trim();
-    const selectedRealm = String(formData.get('realmSelect') || 'frostmourne');
-    const customRealm = String(formData.get('customRealm') || '').trim();
-    const region = String(formData.get('region') || 'us').trim().toLowerCase();
+    const sanitizedName = String(formData.get('name') || '').trim().toLowerCase();
+    if (!sanitizedName) return;
 
-    const realmSlug = toRealmSlug(selectedRealm === '__custom__' ? customRealm : selectedRealm);
-    if (!rawName || !realmSlug) return;
+    const cleanEntry = {
+      name: sanitizedName,
+      realm: HARDCODED_REALM_SLUG,
+      region: HARDCODED_REGION
+    };
 
-    const submitBtn = document.getElementById('submitAddPlayerBtn');
-    const statusMsg = document.getElementById('addPlayerStatusMsg');
-    const originalBtnHtml = submitBtn.innerHTML;
+    state.localEntries = state.localEntries.filter(
+      item => item.name.toLowerCase() !== sanitizedName
+    );
+    state.localEntries.unshift(cleanEntry);
+    saveLocalEntries(state.localEntries);
 
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = `<span>Looking up Armory...</span>`;
-    if (statusMsg) {
-      statusMsg.className = 'text-xs rounded-md px-3 py-2 border border-wowgold-500/40 bg-wowgold-500/10 text-wowgold-300';
-      statusMsg.textContent = `Fetching profile for ${rawName} (${formatRealmDisplayName(realmSlug)} - ${region.toUpperCase()})...`;
-      statusMsg.classList.remove('hidden');
-    }
-
-    try {
-      const resolvedProfile = await fetchAutomatedCharacterPreview(rawName, realmSlug, region);
-      const cleanEntry = {
-        name: rawName.toLowerCase(),
-        realm: realmSlug,
-        region,
-        profile: resolvedProfile
-      };
-
-      const entryId = `${region}-${realmSlug}-${rawName.toLowerCase()}`;
-      state.localEntries = state.localEntries.filter(
-        item => `${item.region}-${toRealmSlug(item.realm)}-${item.name.toLowerCase()}` !== entryId
-      );
-      state.localEntries.unshift(cleanEntry);
-      saveLocalEntries(state.localEntries);
-
-      e.target.reset();
-      if (customRealmContainerEl) customRealmContainerEl.classList.add('hidden');
-      closeAddPlayerModal();
-      mergeCharacterRoster();
-      populateDynamicFilterOptions();
-      renderCharacterCards();
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = originalBtnHtml;
-      if (statusMsg) statusMsg.classList.add('hidden');
-    }
+    e.target.reset();
+    closeAddPlayerModal();
+    mergeCharacterRoster();
+    populateDynamicFilterOptions();
+    renderCharacterCards();
   });
 
   // Export JSON Modal Listeners
