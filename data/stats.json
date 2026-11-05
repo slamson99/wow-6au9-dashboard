@@ -1,9 +1,9 @@
 {
-  "updated": "2026-11-05T23:53:16.001Z",
+  "updated": "2026-11-05T23:58:57.405Z",
   "characters": [
     {
-      "name": "slamson",
-      "realm": "PvP",
+      "name": "nuff",
+      "realm": "Maladath",
       "region": "us",
       "level": "?",
       "race": "Pending API Sync",
@@ -21,17 +21,49 @@
         "agility": 0,
         "intellect": 0,
         "stamina": 0,
+        "armor": 0,
         "crit": 0,
         "haste": 0,
         "mastery": 0,
         "versatility": 0
       },
+      "equipment": [],
       "pending": true,
-      "lastUpdated": "2026-11-05T23:53:14.936Z"
+      "lastUpdated": "2026-11-05T23:58:57.000Z"
+    },
+    {
+      "name": "slamson",
+      "realm": "Maladath",
+      "region": "us",
+      "level": "?",
+      "race": "Pending API Sync",
+      "class": "Adventurer",
+      "spec": "Unknown",
+      "equippedItemLevel": 0,
+      "averageItemLevel": 0,
+      "avatarUrl": "",
+      "online": false,
+      "lastLogin": null,
+      "stats": {
+        "health": 0,
+        "power": 0,
+        "strength": 0,
+        "agility": 0,
+        "intellect": 0,
+        "stamina": 0,
+        "armor": 0,
+        "crit": 0,
+        "haste": 0,
+        "mastery": 0,
+        "versatility": 0
+      },
+      "equipment": [],
+      "pending": true,
+      "lastUpdated": "2026-11-05T23:58:57.205Z"
     },
     {
       "name": "floreat",
-      "realm": "PvP",
+      "realm": "Maladath",
       "region": "us",
       "level": "?",
       "race": "Pending API Sync",
@@ -49,41 +81,15 @@
         "agility": 0,
         "intellect": 0,
         "stamina": 0,
+        "armor": 0,
         "crit": 0,
         "haste": 0,
         "mastery": 0,
         "versatility": 0
       },
+      "equipment": [],
       "pending": true,
-      "lastUpdated": "2026-11-05T23:53:15.481Z"
-    },
-    {
-      "name": "nuff",
-      "realm": "PvP",
-      "region": "us",
-      "level": "?",
-      "race": "Pending API Sync",
-      "class": "Adventurer",
-      "spec": "Unknown",
-      "equippedItemLevel": 0,
-      "averageItemLevel": 0,
-      "avatarUrl": "",
-      "online": false,
-      "lastLogin": null,
-      "stats": {
-        "health": 0,
-        "power": 0,
-        "strength": 0,
-        "agility": 0,
-        "intellect": 0,
-        "stamina": 0,
-        "crit": 0,
-        "haste": 0,
-        "mastery": 0,
-        "versatility": 0
-      },
-      "pending": true,
-      "lastUpdated": "2026-11-05T23:53:16.001Z"
+      "lastUpdated": "2026-11-05T23:58:57.405Z"
     }
   ]
 }
