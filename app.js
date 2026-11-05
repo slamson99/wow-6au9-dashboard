@@ -830,6 +830,137 @@ function closeExportJsonModal() {
 }
 
 /* ========================================================================== */
+/* MODAL 4: GITHUB PAT SETTINGS & DIRECT WORKFLOW_DISPATCH TRIGGER            */
+/* ========================================================================== */
+
+const GITHUB_WORKFLOW_DISPATCH_URL =
+  'https://api.github.com/repos/slamson99/wow-6au9-dashboard/actions/workflows/update.yml/dispatches';
+
+function openSettingsModal() {
+  const modal = document.getElementById('patSettingsModal');
+  const input = document.getElementById('ghPatInput');
+  if (input) {
+    input.value = localStorage.getItem('gh_pat') || '';
+  }
+  modal.classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+  setTimeout(() => input?.focus(), 50);
+}
+
+function closeSettingsModal() {
+  const modal = document.getElementById('patSettingsModal');
+  modal.classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+}
+
+function setButtonLoading(isLoading, labelText) {
+  const btn = document.getElementById('forceSyncApiBtn');
+  const label = document.getElementById('forceSyncBtnLabel');
+  const icon = document.getElementById('forceSyncIcon');
+
+  if (btn) btn.disabled = isLoading;
+  if (label && labelText) label.textContent = labelText;
+  if (icon) {
+    if (isLoading) {
+      icon.classList.add('animate-spin');
+    } else {
+      icon.classList.remove('animate-spin');
+    }
+  }
+}
+
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  const isSuccess = type === 'success';
+  const isError = type === 'error';
+
+  const borderCls = isSuccess
+    ? 'border-emerald-500/60 bg-obsidian-950/95 text-emerald-200'
+    : isError
+      ? 'border-red-500/60 bg-obsidian-950/95 text-red-200'
+      : 'border-wowgold-400/60 bg-obsidian-950/95 text-slate-200';
+
+  const badgeIcon = isSuccess
+    ? `<svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+       </svg>`
+    : isError
+      ? `<svg class="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+         </svg>`
+      : `<svg class="w-5 h-5 text-wowgold-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+         </svg>`;
+
+  toast.className = `pointer-events-auto wow-frame rounded-lg p-3.5 border shadow-wow-modal flex items-start justify-between gap-3 transition-all duration-300 ${borderCls}`;
+  toast.innerHTML = `
+    <div class="flex items-start gap-2.5 text-xs leading-relaxed">
+      ${badgeIcon}
+      <span>${escapeHtml(message)}</span>
+    </div>
+    <button type="button" class="text-slate-400 hover:text-white shrink-0" aria-label="Dismiss notification">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  `;
+
+  toast.querySelector('button')?.addEventListener('click', () => {
+    toast.remove();
+  });
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    if (toast.parentNode) {
+      toast.remove();
+    }
+  }, 6500);
+}
+
+async function triggerWorkflowSync() {
+  const pat = localStorage.getItem('gh_pat');
+  if (!pat) {
+    openSettingsModal();
+    return;
+  }
+
+  setButtonLoading(true, 'Triggering Action...');
+
+  try {
+    const response = await fetch(
+      GITHUB_WORKFLOW_DISPATCH_URL,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${pat}`,
+          'Accept': 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ref: 'main'
+        })
+      }
+    );
+
+    if (response.status === 204) {
+      showToast('Sync triggered! GitHub Action is updating character stats. Live data will refresh in ~1-2 minutes.', 'success');
+    } else {
+      const err = await response.json().catch(() => ({}));
+      showToast(`Error triggering sync: ${err.message || 'Check PAT permissions'}`, 'error');
+    }
+  } catch (error) {
+    showToast(`Network error: ${error.message}`, 'error');
+  } finally {
+    setButtonLoading(false, 'Force Sync API');
+  }
+}
+
+/* ========================================================================== */
 /* DATA FETCHING FROM ./data/stats.json                                       */
 /* ========================================================================== */
 
@@ -902,6 +1033,14 @@ function setupEventListeners() {
   // Header Actions
   document.getElementById('refreshSnapshotBtn').addEventListener('click', () => {
     fetchStaticSnapshot();
+  });
+
+  document.getElementById('forceSyncApiBtn')?.addEventListener('click', () => {
+    triggerWorkflowSync();
+  });
+
+  document.getElementById('openPatSettingsBtn')?.addEventListener('click', () => {
+    openSettingsModal();
   });
 
   document.getElementById('openAddPlayerModalBtn').addEventListener('click', openAddPlayerModal);
@@ -979,6 +1118,35 @@ function setupEventListeners() {
     }
   });
 
+  // GitHub PAT Settings Modal Listeners
+  document.getElementById('closePatSettingsModalBtn')?.addEventListener('click', closeSettingsModal);
+  document.getElementById('cancelPatSettingsBtn')?.addEventListener('click', closeSettingsModal);
+  document.getElementById('patSettingsModal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'patSettingsModal') {
+      closeSettingsModal();
+    }
+  });
+
+  document.getElementById('clearPatBtn')?.addEventListener('click', () => {
+    localStorage.removeItem('gh_pat');
+    const input = document.getElementById('ghPatInput');
+    if (input) input.value = '';
+    showToast('Cleared saved GitHub Personal Access Token from browser storage.', 'info');
+  });
+
+  document.getElementById('patSettingsForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('ghPatInput');
+    const token = String(input?.value || '').trim();
+    if (!token) {
+      showToast('Please enter a valid GitHub Personal Access Token.', 'error');
+      return;
+    }
+    localStorage.setItem('gh_pat', token);
+    closeSettingsModal();
+    triggerWorkflowSync();
+  });
+
   document.getElementById('copyExportJsonBtn').addEventListener('click', async () => {
     const textarea = document.getElementById('exportJsonTextarea');
     const confirmEl = document.getElementById('copyConfirmMessage');
@@ -1011,6 +1179,7 @@ function setupEventListeners() {
       closeCharacterDetailModal();
       closeAddPlayerModal();
       closeExportJsonModal();
+      closeSettingsModal();
     }
   });
 }
