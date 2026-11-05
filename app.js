@@ -314,6 +314,87 @@ function buildQueuedMaladathProfile(entry) {
 }
 
 /**
+ * Normalize a character object from `data/stats.json` (supports both the flat Classic/Forever
+ * schema produced by `fetch-stats.js` and the detailed schema).
+ */
+function normalizeStaticCharacter(raw) {
+  if (!raw || !raw.name) return null;
+
+  const charId = (raw.id || `${HARDCODED_REGION}-${HARDCODED_REALM_SLUG}-${raw.name}`).toLowerCase();
+  const displayName = formatCharacterDisplayName(raw.name);
+  const realmObj = typeof raw.realm === 'object' && raw.realm !== null
+    ? raw.realm
+    : {
+        name: formatCharacterDisplayName(String(raw.realm || HARDCODED_REALM_NAME)),
+        slug: HARDCODED_REALM_SLUG
+      };
+
+  const lastLoginMs = raw.last_login_timestamp
+    ? Number(raw.last_login_timestamp)
+    : raw.lastLogin
+      ? new Date(raw.lastLogin).getTime()
+      : 0;
+
+  const rawStats = raw.stats || {};
+  const strength = Number(rawStats.strength || 0);
+  const agility = Number(rawStats.agility || 0);
+  const intellect = Number(rawStats.intellect || 0);
+  const stamina = Number(rawStats.stamina || 0);
+
+  let primaryName = rawStats.primary_stat_name || 'Primary';
+  let primaryVal = Number(rawStats.primary_stat_value || 0);
+  if (!primaryVal && (strength || agility || intellect)) {
+    const candidates = [
+      { name: 'Strength', value: strength },
+      { name: 'Agility', value: agility },
+      { name: 'Intellect', value: intellect }
+    ].sort((a, b) => b.value - a.value);
+    primaryName = candidates[0].name;
+    primaryVal = candidates[0].value;
+  }
+
+  const className = raw.class || 'Warrior';
+  const avatarUrl = raw.media?.avatar || raw.avatarUrl || getClassIcon(className);
+
+  return {
+    ...raw,
+    id: charId,
+    name: displayName,
+    formatted_title: raw.formatted_title || displayName,
+    realm: realmObj,
+    region: raw.region || HARDCODED_REGION,
+    race: raw.race || (raw.pending ? 'Pending API Sync' : 'Champion'),
+    class: className,
+    active_spec: raw.active_spec || raw.spec || 'Classic',
+    level: raw.level ?? '—',
+    equipped_item_level: raw.equipped_item_level ?? raw.equippedItemLevel ?? '—',
+    average_item_level: raw.average_item_level ?? raw.averageItemLevel ?? '—',
+    last_login_timestamp: Number.isNaN(lastLoginMs) ? 0 : lastLoginMs,
+    is_online: Boolean(raw.is_online ?? raw.online),
+    location: raw.location || `${realmObj.name} (Oceanic)`,
+    media: {
+      avatar: avatarUrl,
+      inset: raw.media?.inset || avatarUrl,
+      main_raw: raw.media?.main_raw || avatarUrl
+    },
+    stats: {
+      ...rawStats,
+      strength,
+      agility,
+      intellect,
+      stamina,
+      crit: Number(rawStats.crit || 0),
+      haste: Number(rawStats.haste || 0),
+      mastery: Number(rawStats.mastery || 0),
+      versatility: Number(rawStats.versatility || 0),
+      primary_stat_name: primaryName,
+      primary_stat_value: primaryVal
+    },
+    is_local: false
+  };
+}
+
+/**
  * Merge static characters loaded from `./data/stats.json` with locally added Maladath entries.
  * Never injects mock fallback characters.
  */
@@ -321,16 +402,9 @@ function mergeCharacterRoster() {
   const byId = new Map();
 
   for (const staticChar of state.staticCharacters) {
-    if (staticChar && staticChar.name) {
-      const charId = (staticChar.id || `${HARDCODED_REGION}-${HARDCODED_REALM_SLUG}-${staticChar.name}`).toLowerCase();
-      const displayName = formatCharacterDisplayName(staticChar.name);
-      byId.set(charId, {
-        ...staticChar,
-        id: charId,
-        name: displayName,
-        formatted_title: staticChar.formatted_title || displayName,
-        is_local: false
-      });
+    const normalized = normalizeStaticCharacter(staticChar);
+    if (normalized) {
+      byId.set(normalized.id, normalized);
     }
   }
 
@@ -976,7 +1050,7 @@ async function fetchStaticSnapshot() {
     const payload = await response.json();
     state.staticCharacters = Array.isArray(payload.characters) ? payload.characters : [];
     state.onlineThresholdMinutes = Number(payload.online_threshold_minutes || DEFAULT_ONLINE_THRESHOLD_MINUTES);
-    state.snapshotUpdatedAt = payload.updated_at || null;
+    state.snapshotUpdatedAt = payload.updated_at || payload.updated || null;
   } catch (err) {
     console.warn('Could not load ./data/stats.json snapshot:', err.message);
     state.staticCharacters = [];
