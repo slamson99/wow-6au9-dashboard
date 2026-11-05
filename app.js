@@ -9,15 +9,16 @@
  * - Exports clean `[{ "name": "...", "realm": "maladath", "region": "us" }]` JSON
  */
 
-const LOCAL_STORAGE_KEY = 'wow_forever_pvp_roster_v1';
+const LOCAL_STORAGE_KEY = 'wow_maladath_classicann_roster_v1';
 const LEGACY_STORAGE_KEYS = [
   'wow_forever_local_characters_v1',
   'wow_forever_local_characters_v2',
-  'wow_maladath_roster_v1'
+  'wow_maladath_roster_v1',
+  'wow_forever_pvp_roster_v1'
 ];
 
-const HARDCODED_REALM_SLUG = 'pvp';
-const HARDCODED_REALM_NAME = 'PvP';
+const HARDCODED_REALM_SLUG = 'maladath';
+const HARDCODED_REALM_NAME = 'Maladath';
 const HARDCODED_REGION = 'us';
 const DEFAULT_ONLINE_THRESHOLD_MINUTES = 30;
 
