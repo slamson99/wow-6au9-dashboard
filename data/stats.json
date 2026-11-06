@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T23:58:57.405Z",
+  "updated": "2026-11-06T00:03:42.709Z",
   "characters": [
     {
       "name": "nuff",
@@ -29,7 +29,7 @@
       },
       "equipment": [],
       "pending": true,
-      "lastUpdated": "2026-11-05T23:58:57.000Z"
+      "lastUpdated": "2026-11-06T00:03:42.171Z"
     },
     {
       "name": "slamson",
@@ -59,7 +59,7 @@
       },
       "equipment": [],
       "pending": true,
-      "lastUpdated": "2026-11-05T23:58:57.205Z"
+      "lastUpdated": "2026-11-06T00:03:42.444Z"
     },
     {
       "name": "floreat",
@@ -89,7 +89,7 @@
       },
       "equipment": [],
       "pending": true,
-      "lastUpdated": "2026-11-05T23:58:57.405Z"
+      "lastUpdated": "2026-11-06T00:03:42.708Z"
     }
   ]
 }
